@@ -6,6 +6,7 @@ export const seed = async function (knex: Knex) {
   // Deletes ALL existing entries
   await knex("users").del();
   await knex("users").insert(
+    //@ts-ignore
     Array.from({ length: 5 }, (v, i) => {
       return {
         id: i,

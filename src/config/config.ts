@@ -1,6 +1,7 @@
 import envSchema from "env-schema";
 import { S } from "fluent-json-schema";
 import type { FastifyRequest } from "fastify";
+import kenxconf from "../../knexfile";
 
 export type ServerConfig = Awaited<ReturnType<typeof getConfig>>;
 export async function getConfig() {
@@ -39,21 +40,7 @@ export async function getConfig() {
         },
       },
     },
-    knex: {
-      client: "postgresql",
-      connection: {
-        database: "my_app",
-        user: "backend",
-        password: "backend",
-      },
-      pool: {
-        min: 2,
-        max: 10,
-      },
-      migrations: {
-        tableName: "knex_migrations",
-      },
-    },
+    knex: kenxconf[env.NODE_ENV as any],
   };
   return config;
 }

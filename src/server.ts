@@ -6,11 +6,10 @@ import { FastifyInstance } from "fastify";
 import { ServerConfig } from "config";
 
 async function plugin(server: FastifyInstance, config: ServerConfig) {
-  server.register(cors, {});
-  // .register(autoLoad, {
-  //   dir: path.join(__dirname, "plugins"),
-  //   options: config,
-  // })
+  server.register(cors, {}).register(autoLoad, {
+    dir: path.join(__dirname, "plugins"),
+    options: config,
+  });
   // .register(autoLoad, {
   //   dir: path.join(__dirname, "services"),
   //   options: config,
