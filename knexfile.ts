@@ -25,12 +25,16 @@ const config: { [key: string]: Knex.Config } = {
       user: "backend",
       password: "backend",
     },
+
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
-      tableName: "knex_migrations",
+      directory: "./knex/migrations",
+    },
+    seeds: {
+      directory: "./knex/seeds",
     },
   },
 
