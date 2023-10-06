@@ -11,15 +11,21 @@
   "dependencies": {
     "@fastify/autoload": "^5.7.1",
     "@fastify/cors": "^8.4.0",
+    "bcrypt": "^5.1.1",
     "env-schema": "^5.2.0",
     "fastify": "^4.23.2",
     "fastify-plugin": "^4.5.1",
     "fluent-json-schema": "^4.2.0-beta.0",
-    "nodemon": "^3.0.1"
+    "knex": "^2.5.0",
+    "nodemon": "^3.0.1",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.1.0",
     "@tsconfig/node18": "^18.2.2",
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^20.8.2",
+    "sqlite3": "^5.1.6",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

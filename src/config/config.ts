@@ -42,7 +42,7 @@ export async function getConfig() {
     knex: {
       client: "postgresql",
       connection: {
-        database: "real_word_app_db",
+        database: "my_app",
         user: "backend",
         password: "backend",
       },
