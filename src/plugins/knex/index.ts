@@ -18,7 +18,7 @@ const fastifyKnexJS: FastifyPluginCallback<ServerConfig> = async (
 
       if (instance?.knex === handler) {
         instance?.knex?.destroy();
-
+        //@ts-ignore
         instance.knex = null;
       }
 

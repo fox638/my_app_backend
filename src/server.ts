@@ -1,5 +1,5 @@
 import path from "path";
-import fp, { PluginMetadata } from "fastify-plugin";
+import fp from "fastify-plugin";
 import autoLoad from "@fastify/autoload";
 import cors from "@fastify/cors";
 import { FastifyInstance } from "fastify";
@@ -10,6 +10,7 @@ async function plugin(server: FastifyInstance, config: ServerConfig) {
     dir: path.join(__dirname, "plugins"),
     options: config,
   });
+
   // .register(autoLoad, {
   //   dir: path.join(__dirname, "services"),
   //   options: config,
