@@ -5,6 +5,7 @@ import mercurius from "mercurius";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { loadFiles } from "@graphql-tools/load-files";
 import path from "node:path";
+import mercuriusAuth from "mercurius-auth";
 
 const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   server,
@@ -23,6 +24,18 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   await server.register(mercurius, {
     schema,
     graphiql: true,
+  });
+
+  await server.register(mercuriusAuth, {
+    authContext(context) {
+      return {
+        identity: context.reply.request.cookies["x-user"] || "",
+      };
+    },
+    async applyPolicy(authDirectiveAST, parent, args, context, info) {
+      return context?.auth?.identity === "admin";
+    },
+    authDirective: "auth",
   });
 };
 

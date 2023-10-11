@@ -4,6 +4,8 @@ import autoLoad from "@fastify/autoload";
 import cors from "@fastify/cors";
 import { FastifyInstance } from "fastify";
 import { ServerConfig } from "config";
+import type { FastifyCookieOptions } from "@fastify/cookie";
+import cookie from "@fastify/cookie";
 
 async function plugin(server: FastifyInstance, config: ServerConfig) {
   server.register(cors, {}).register(autoLoad, {
@@ -20,6 +22,11 @@ async function plugin(server: FastifyInstance, config: ServerConfig) {
   //   options: config,
   //   dirNameRoutePrefix: false,
   // });
+  server.register(cookie, {
+    secret: "my-secret", // for cookies signature
+    parseOptions: {}, // options for parsing cookies
+  } as FastifyCookieOptions);
+
   server.setErrorHandler((err, req, res) => {
     req.log.error({ req, res, err }, err && err.message);
     err.message = "An error has occurred";
