@@ -10,6 +10,12 @@ const authMutationsResolver: IResolvers = {
         username: "testUser",
       };
     },
+    signIn: (_, args, context, info) => {
+      console.log(args);
+      return {
+        ok: false,
+      };
+    },
   },
 };
 

@@ -3,10 +3,22 @@ input AuthLoginInput {
   password: String!
 }
 
+input AuthSignInInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
 type AuthLoginResponse {
-  username: String
+  user: User
+}
+
+type AuthSignInResponse {
+  ok: Boolean!
+  errors: [FormError]
 }
 
 type AuthMutations {
   login(input: AuthLoginInput): AuthLoginResponse
+  signIn(input: AuthSignInInput): AuthSignInResponse
 }

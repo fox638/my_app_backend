@@ -1,0 +1,4 @@
+type FormError {
+  fieldName: String
+  message: String
+}
