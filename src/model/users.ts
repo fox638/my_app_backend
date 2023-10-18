@@ -7,9 +7,9 @@ export function usersModel(knex: Knex) {
       return knex("users").first().where({ email });
     },
     async createUser(input: AuthSignInInput) {
-      console.log("call", input);
-      const user = await knex("users").insert(input);
-      console.log("newUser", user);
+      await knex("users").insert(input);
+
+      return await knex("users").first().where({ email: input.email });
     },
   };
 }
