@@ -1,7 +1,9 @@
-const { knex } = require("knex");
+require("ts-node/register");
+import knex from "knex";
+import config from "./knexfile";
 const { updateTypes } = require("knex-types");
 
-const db = knex(require("./knexfile").staging);
+const db = knex(config.staging);
 
 updateTypes(db, { output: "./types.ts" }).catch((err: any) => {
   console.error(err);

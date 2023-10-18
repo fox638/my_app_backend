@@ -21,6 +21,7 @@ export type AuthLoginInput = {
 
 export type AuthLoginResponse = {
   __typename?: 'AuthLoginResponse';
+  ok: Scalars['Boolean']['output'];
   user?: Maybe<User>;
 };
 
@@ -67,6 +68,7 @@ export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']['output']>;
   add?: Maybe<Scalars['Int']['output']>;
+  me?: Maybe<User>;
 };
 
 
@@ -78,5 +80,5 @@ export type QueryAddArgs = {
 export type User = {
   __typename?: 'User';
   email?: Maybe<Scalars['String']['output']>;
-  password?: Maybe<Scalars['String']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
 };

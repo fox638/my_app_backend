@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+import type { FastifyJwtNamespace } from "@fastify/jwt";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -11,7 +12,7 @@ declare module "fastify" {
     hash: (plain: string) => Promise<string>;
     hashCompare: (plain: string, hash: string) => Promise<boolean>;
   }
-  interface FastifyInstance {
+  interface FastifyInstance extends FastifyJwtNamespace {
     knex: Knex;
     hash: (plain: string) => Promise<string>;
     hashCompare: (plain: string, hash: string) => Promise<boolean>;

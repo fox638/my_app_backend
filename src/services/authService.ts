@@ -1,11 +1,15 @@
 import { MercuriusContext } from "mercurius";
 import { usersModel } from "../model/users";
-import { AuthSignInInput, AuthSignInResponse } from "types/resolver-gql";
-import {} from "knex";
+import {
+  AuthLoginInput,
+  AuthLoginResponse,
+  AuthSignInInput,
+  AuthSignInResponse,
+} from "../types/resolver-gql";
 
 export function authService(context: MercuriusContext) {
   return {
-    signIn: async (input: AuthSignInInput): Promise<AuthSignInResponse> => {
+    signUp: async (input: AuthSignInInput): Promise<AuthSignInResponse> => {
       const userModel = usersModel(context.app.knex);
       const user = await userModel.getUserByEmail(input.email);
       if (!user) {
@@ -17,6 +21,34 @@ export function authService(context: MercuriusContext) {
       } else {
         return {
           ok: false,
+        };
+      }
+    },
+    login: async (input: AuthLoginInput): Promise<AuthLoginResponse> => {
+      const userModel = usersModel(context.app.knex);
+      const user = await userModel.getUserByEmail(input.email);
+      if (user) {
+        if (await context.app.hashCompare(input.password, user.password)) {
+          const jwt = await context.app.jwt.sign({ email: user.email });
+
+          context.reply.setCookie("user-jwt", jwt, {
+            httpOnly: true,
+          });
+
+          return {
+            ok: true,
+            user,
+          };
+        } else {
+          return {
+            ok: false,
+            user: null,
+          };
+        }
+      } else {
+        return {
+          ok: false,
+          user: null,
         };
       }
     },

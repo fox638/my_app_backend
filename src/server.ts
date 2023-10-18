@@ -3,7 +3,7 @@ import fp from "fastify-plugin";
 import autoLoad from "@fastify/autoload";
 import cors from "@fastify/cors";
 import { FastifyInstance } from "fastify";
-import { ServerConfig } from "config";
+import { ServerConfig } from "./config";
 import type { FastifyCookieOptions } from "@fastify/cookie";
 import cookie from "@fastify/cookie";
 

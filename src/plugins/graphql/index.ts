@@ -1,4 +1,3 @@
-import { ServerConfig } from "config";
 import fp from "fastify-plugin";
 import { FastifyPluginAsync } from "fastify/types/plugin";
 import mercurius from "mercurius";
@@ -6,6 +5,8 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { loadFiles } from "@graphql-tools/load-files";
 import path from "node:path";
 import mercuriusAuth from "mercurius-auth";
+import { usersModel } from "../../model/users";
+import { ServerConfig } from "../../config";
 
 const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   server,
@@ -27,13 +28,29 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   });
 
   await server.register(mercuriusAuth, {
-    authContext(context) {
+    async authContext(context) {
+      const userModel = usersModel(context.app.knex);
+      const token = context.reply.request.cookies["user-jwt"] || "";
+      if (!token) {
+        return {
+          user: null,
+        };
+      }
+
+      const jwtDecode = context.app.jwt.decode(token) as any;
+
+      if (jwtDecode?.email) {
+        const user = (await userModel.getUserByEmail(jwtDecode?.email)) || null;
+        return {
+          user,
+        };
+      }
       return {
-        identity: context.reply.request.cookies["x-user"] || "",
+        user: null,
       };
     },
     async applyPolicy(authDirectiveAST, parent, args, context, info) {
-      return context?.auth?.identity === "admin";
+      return !!context?.auth?.user;
     },
     authDirective: "auth",
   });

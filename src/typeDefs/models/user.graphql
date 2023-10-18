@@ -1,4 +1,4 @@
 type User {
   email: String
-  password: String
+  username: String
 }

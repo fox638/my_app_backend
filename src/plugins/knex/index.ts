@@ -1,9 +1,9 @@
-import { ServerConfig } from "config";
 import fp from "fastify-plugin";
 import { FastifyInstance } from "fastify/types/instance";
 import { FastifyPluginCallback } from "fastify/types/plugin";
 import { IncomingMessage, Server, ServerResponse } from "http";
 import knex from "knex";
+import { ServerConfig } from "../../config";
 
 const fastifyKnexJS: FastifyPluginCallback<ServerConfig> = async (
   server: FastifyInstance<Server, IncomingMessage, ServerResponse>,
