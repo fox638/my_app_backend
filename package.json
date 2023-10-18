@@ -9,7 +9,8 @@
     "dev": "nodemon",
     "db:seed": "yarn knex seed:run --env staging",
     "db:migrate": "yarn knex migrate:latest --env staging",
-    "postdb:migrate": "yarn ts-node get_types.ts"
+    "postdb:migrate": "yarn ts-node get_types.ts",
+    "gen:gql": "graphql-codegen"
   },
   "dependencies": {
     "@fastify/autoload": "^5.7.1",
@@ -31,6 +32,10 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@parcel/watcher": "^2.3.0",
     "@tsconfig/node18": "^18.2.2",
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^20.8.2",

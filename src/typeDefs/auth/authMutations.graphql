@@ -1,3 +1,7 @@
+extend type Mutation {
+  auth: AuthMutations!
+}
+
 input AuthLoginInput {
   email: String!
   password: String!
@@ -19,6 +23,6 @@ type AuthSignInResponse {
 }
 
 type AuthMutations {
-  login(input: AuthLoginInput): AuthLoginResponse
-  signIn(input: AuthSignInInput): AuthSignInResponse
+  login(input: AuthLoginInput!): AuthLoginResponse!
+  signIn(input: AuthSignInInput!): AuthSignInResponse!
 }

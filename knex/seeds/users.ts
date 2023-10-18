@@ -9,7 +9,7 @@ export const seed = async function (knex: Knex) {
     //@ts-ignore
     Array.from({ length: 5 }, (v, i) => {
       return {
-        id: i,
+        // id: i,
         email: `user${i}@demo.test`,
         username: faker.name.firstName(),
         password: bcrypt.hashSync(`user${i}pass`, 10),

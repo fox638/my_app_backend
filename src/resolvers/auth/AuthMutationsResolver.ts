@@ -1,4 +1,6 @@
 import { IResolvers } from "mercurius";
+import { authService } from "../../services/authService";
+import { AuthMutationsSignInArgs } from "types/resolver-gql";
 
 const authMutationsResolver: IResolvers = {
   AuthMutations: {
@@ -10,11 +12,8 @@ const authMutationsResolver: IResolvers = {
         username: "testUser",
       };
     },
-    signIn: (_, args, context, info) => {
-      console.log(args);
-      return {
-        ok: false,
-      };
+    signIn: (_, args: AuthMutationsSignInArgs, context, info) => {
+      return authService(context).signIn(args.input);
     },
   },
 };
