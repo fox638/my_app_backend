@@ -6,6 +6,6 @@
   "ignore": [
     "src/**/*.spec.ts"
   ],
-  "exec": "ts-node --files ./src/index.ts",
+  "exec": "ts-node --files src/index.ts",
   "delay": 500
 }
