@@ -10,9 +10,7 @@ export function usersModel(knex: Knex) {
       return knex("users").first().where({ id });
     },
     async createUser(input: AuthSignInInput) {
-      await knex("users").insert(input);
-
-      return await knex("users").first().where({ email: input.email });
+      return await knex("users").insert(input).returning(["email", "username"]);
     },
   };
 }

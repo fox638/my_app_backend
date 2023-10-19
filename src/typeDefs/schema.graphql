@@ -2,15 +2,3 @@ directive @auth on OBJECT | FIELD_DEFINITION
 
 type Query
 type Mutation
-
-extend type Query {
-  _empty: String
-  add(x: Int, y: Int): Int @auth
-}
-
-# type Query {
-# }
-
-# type Mutation {
-#   auth: AuthMutations
-# }

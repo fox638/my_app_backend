@@ -66,15 +66,7 @@ export type Mutation = {
 
 export type Query = {
   __typename?: 'Query';
-  _empty?: Maybe<Scalars['String']['output']>;
-  add?: Maybe<Scalars['Int']['output']>;
   me?: Maybe<User>;
-};
-
-
-export type QueryAddArgs = {
-  x?: InputMaybe<Scalars['Int']['input']>;
-  y?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type User = {
