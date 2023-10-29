@@ -2,7 +2,7 @@ import { IResolvers } from "mercurius";
 import { authService } from "../../services/authService";
 import {
   AuthMutationsLoginArgs,
-  AuthMutationsSignInArgs,
+  AuthMutationsSignUpArgs,
 } from "../../types/resolver-gql";
 
 const authMutationsResolver: IResolvers = {
@@ -10,7 +10,7 @@ const authMutationsResolver: IResolvers = {
     login: (_, args: AuthMutationsLoginArgs, context, info) => {
       return authService(context).login(args.input);
     },
-    signIn: (_, args: AuthMutationsSignInArgs, context, info) => {
+    signUp: (_, args: AuthMutationsSignUpArgs, context, info) => {
       return authService(context).signUp(args.input);
     },
   },

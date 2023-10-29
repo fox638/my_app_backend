@@ -7,7 +7,7 @@ input AuthLoginInput {
   password: String!
 }
 
-input AuthSignInInput {
+input AuthSignUpInput {
   email: String!
   password: String!
   username: String!
@@ -18,12 +18,12 @@ type AuthLoginResponse {
   user: User
 }
 
-type AuthSignInResponse {
+type AuthSignUpResponse {
   ok: Boolean!
   errors: [FormError]
 }
 
 type AuthMutations {
   login(input: AuthLoginInput!): AuthLoginResponse!
-  signIn(input: AuthSignInInput!): AuthSignInResponse!
+  signUp(input: AuthSignUpInput!): AuthSignUpResponse!
 }

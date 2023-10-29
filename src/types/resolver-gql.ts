@@ -28,7 +28,7 @@ export type AuthLoginResponse = {
 export type AuthMutations = {
   __typename?: 'AuthMutations';
   login: AuthLoginResponse;
-  signIn: AuthSignInResponse;
+  signUp: AuthSignUpResponse;
 };
 
 
@@ -37,18 +37,18 @@ export type AuthMutationsLoginArgs = {
 };
 
 
-export type AuthMutationsSignInArgs = {
-  input: AuthSignInInput;
+export type AuthMutationsSignUpArgs = {
+  input: AuthSignUpInput;
 };
 
-export type AuthSignInInput = {
+export type AuthSignUpInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
 };
 
-export type AuthSignInResponse = {
-  __typename?: 'AuthSignInResponse';
+export type AuthSignUpResponse = {
+  __typename?: 'AuthSignUpResponse';
   errors?: Maybe<Array<Maybe<FormError>>>;
   ok: Scalars['Boolean']['output'];
 };
@@ -67,6 +67,7 @@ export type Mutation = {
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
+  test?: Maybe<Scalars['String']['output']>;
 };
 
 export type User = {

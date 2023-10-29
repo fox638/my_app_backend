@@ -3,13 +3,13 @@ import { usersModel } from "../model/users";
 import {
   AuthLoginInput,
   AuthLoginResponse,
-  AuthSignInInput,
-  AuthSignInResponse,
+  AuthSignUpInput,
+  AuthSignUpResponse,
 } from "../types/resolver-gql";
 
 export function authService(context: MercuriusContext) {
   return {
-    signUp: async (input: AuthSignInInput): Promise<AuthSignInResponse> => {
+    signUp: async (input: AuthSignUpInput): Promise<AuthSignUpResponse> => {
       const userModel = usersModel(context.app.knex);
       const user = await userModel.getUserByEmail(input.email);
       if (!user) {

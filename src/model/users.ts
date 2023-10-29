@@ -1,5 +1,5 @@
 import { Knex } from "knex";
-import { AuthSignInInput } from "../types/resolver-gql";
+import { AuthSignUpInput } from "../types/resolver-gql";
 
 export function usersModel(knex: Knex) {
   return {
@@ -9,7 +9,7 @@ export function usersModel(knex: Knex) {
     getUserById(id: number) {
       return knex("users").first().where({ id });
     },
-    async createUser(input: AuthSignInInput) {
+    async createUser(input: AuthSignUpInput) {
       return await knex("users").insert(input).returning(["email", "username"]);
     },
   };
