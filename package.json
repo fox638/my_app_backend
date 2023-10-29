@@ -29,6 +29,7 @@
     "knex": "^2.5.0",
     "mercurius": "^13.1.0",
     "mercurius-auth": "^4.0.0",
+    "mercurius-validation": "^4.0.0",
     "nodemon": "^3.0.1",
     "pg": "^8.11.3",
     "tsconfig-paths": "^4.2.0"

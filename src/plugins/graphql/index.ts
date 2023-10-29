@@ -7,6 +7,7 @@ import path from "node:path";
 import mercuriusAuth from "mercurius-auth";
 import { usersModel } from "../../model/users";
 import { ServerConfig } from "../../config";
+import mercuriusValidation from "mercurius-validation";
 
 const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   server,
@@ -53,6 +54,27 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
       return !!context?.auth?.user;
     },
     authDirective: "auth",
+  });
+
+  await server.register(mercuriusValidation, {
+    schema: {
+      AuthSignUpInput: {
+        email: {
+          errorMessage: "Invalid email",
+          type: "string",
+          format: "email",
+        },
+        password: {
+          type: "string",
+          minLength: 4,
+          maxLength: 10,
+          errorMessage: {
+            minLength: "Минимальная длинна 4",
+            maxLength: "Максимальная длинна 10",
+          },
+        },
+      },
+    },
   });
 };
 
