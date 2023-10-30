@@ -21,6 +21,7 @@ export type AuthLoginInput = {
 
 export type AuthLoginResponse = {
   __typename?: 'AuthLoginResponse';
+  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
   ok: Scalars['Boolean']['output'];
   user?: Maybe<User>;
 };
@@ -74,7 +75,6 @@ export type Mutation = {
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
-  test?: Maybe<Scalars['String']['output']>;
 };
 
 export type User = {

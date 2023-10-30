@@ -15,6 +15,11 @@ const schema = Joy.object<AuthSignUpInput, true>({
   username: Joy.string().required(),
 });
 
+const loginInputSchema = Joy.object<AuthLoginInput, false>({
+  email: Joy.string().email().required(),
+  password: Joy.string().required(),
+});
+
 function parseJoyError(error: Joy.ValidationError): Array<FormError> {
   return error.details.map((item) => ({
     __typename: "FormError",
@@ -26,13 +31,12 @@ function parseJoyError(error: Joy.ValidationError): Array<FormError> {
 export function authService(context: MercuriusContext) {
   return {
     signUp: async (input: AuthSignUpInput): Promise<AuthSignUpResponse> => {
-      const { error, value } = schema.validate(input);
+      const { error } = schema.validate(input);
 
       if (error) {
-        const parseErrors = parseJoyError(error);
         return {
           ok: false,
-          errors: parseErrors,
+          errors: parseJoyError(error),
         };
       }
 
@@ -57,8 +61,17 @@ export function authService(context: MercuriusContext) {
       }
     },
     login: async (input: AuthLoginInput): Promise<AuthLoginResponse> => {
+      const { error } = loginInputSchema.validate(input);
+      if (error) {
+        return {
+          ok: false,
+          errors: parseJoyError(error),
+        };
+      }
+
       const userModel = usersModel(context.app.knex);
       const user = await userModel.getUserByEmail(input.email);
+
       if (user) {
         if (await context.app.hashCompare(input.password, user.password)) {
           const jwt = await context.app.jwt.sign({ email: user.email });
@@ -71,18 +84,19 @@ export function authService(context: MercuriusContext) {
             ok: true,
             user,
           };
-        } else {
-          return {
-            ok: false,
-            user: null,
-          };
         }
-      } else {
-        return {
-          ok: false,
-          user: null,
-        };
       }
+
+      return {
+        ok: false,
+        user: null,
+        errors: [
+          {
+            __typename: "ErrorMessage",
+            message: "invalid credentials",
+          },
+        ],
+      };
     },
   };
 }

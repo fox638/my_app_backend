@@ -4,6 +4,5 @@ import { User } from "../../types/resolver-gql";
 export default {
   Query: {
     me: (_, args, context) => context.auth?.user as User,
-    test: () => "test message",
   },
 } as IResolvers;
