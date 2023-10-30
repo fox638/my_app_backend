@@ -5,11 +5,37 @@ import {
   AuthLoginResponse,
   AuthSignUpInput,
   AuthSignUpResponse,
+  FormError,
 } from "../types/resolver-gql";
+import Joy from "joi";
+
+const schema = Joy.object<AuthSignUpInput, true>({
+  email: Joy.string().email().required(),
+  password: Joy.string().max(10).min(4).required(),
+  username: Joy.string().required(),
+});
+
+function parseJoyError(error: Joy.ValidationError): Array<FormError> {
+  return error.details.map((item) => ({
+    __typename: "FormError",
+    message: item.message,
+    fieldName: item.path.toString(),
+  }));
+}
 
 export function authService(context: MercuriusContext) {
   return {
     signUp: async (input: AuthSignUpInput): Promise<AuthSignUpResponse> => {
+      const { error, value } = schema.validate(input);
+
+      if (error) {
+        const parseErrors = parseJoyError(error);
+        return {
+          ok: false,
+          errors: parseErrors,
+        };
+      }
+
       const userModel = usersModel(context.app.knex);
       const user = await userModel.getUserByEmail(input.email);
       if (!user) {
@@ -21,6 +47,12 @@ export function authService(context: MercuriusContext) {
       } else {
         return {
           ok: false,
+          errors: [
+            {
+              __typename: "ErrorMessage",
+              message: "Already registered",
+            },
+          ],
         };
       }
     },

@@ -20,7 +20,7 @@ type AuthLoginResponse {
 
 type AuthSignUpResponse {
   ok: Boolean!
-  errors: [FormError]
+  errors: [ErrorUnion]
 }
 
 type AuthMutations {

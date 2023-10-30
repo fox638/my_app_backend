@@ -2,3 +2,9 @@ type FormError {
   fieldName: String
   message: String
 }
+
+type ErrorMessage {
+  message: String
+}
+
+union ErrorUnion = FormError | ErrorMessage

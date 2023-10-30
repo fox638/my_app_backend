@@ -49,9 +49,16 @@ export type AuthSignUpInput = {
 
 export type AuthSignUpResponse = {
   __typename?: 'AuthSignUpResponse';
-  errors?: Maybe<Array<Maybe<FormError>>>;
+  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
   ok: Scalars['Boolean']['output'];
 };
+
+export type ErrorMessage = {
+  __typename?: 'ErrorMessage';
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+export type ErrorUnion = ErrorMessage | FormError;
 
 export type FormError = {
   __typename?: 'FormError';

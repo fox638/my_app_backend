@@ -56,26 +56,26 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
     authDirective: "auth",
   });
 
-  await server.register(mercuriusValidation, {
-    schema: {
-      AuthSignUpInput: {
-        email: {
-          errorMessage: "Invalid email",
-          type: "string",
-          format: "email",
-        },
-        password: {
-          type: "string",
-          minLength: 4,
-          maxLength: 10,
-          errorMessage: {
-            minLength: "Минимальная длинна 4",
-            maxLength: "Максимальная длинна 10",
-          },
-        },
-      },
-    },
-  });
+  // await server.register(mercuriusValidation, {
+  //   schema: {
+  //     AuthSignUpInput: {
+  //       email: {
+  //         errorMessage: "Invalid email",
+  //         type: "string",
+  //         format: "email",
+  //       },
+  //       password: {
+  //         type: "string",
+  //         minLength: 4,
+  //         maxLength: 10,
+  //         errorMessage: {
+  //           minLength: "Минимальная длинна 4",
+  //           maxLength: "Максимальная длинна 10",
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
 };
 
 export default fp(graphqlMercurius);
