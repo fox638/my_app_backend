@@ -9,8 +9,13 @@ export function usersModel(knex: Knex) {
     getUserById(id: number) {
       return knex("users").first().where({ id });
     },
+    getUserByUsername(username: string) {
+      return knex("users").first().where({ username });
+    },
     async createUser(input: AuthSignUpInput) {
-      return await knex("users").insert(input).returning(["email", "username"]);
+      return await knex("users")
+        .insert(input)
+        .returning(["email", "username", "id"]);
     },
   };
 }

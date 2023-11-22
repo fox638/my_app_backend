@@ -42,11 +42,34 @@ export function authService(context: MercuriusContext) {
 
       const userModel = usersModel(context.app.knex);
       const user = await userModel.getUserByEmail(input.email);
-      if (!user) {
+      const userByUsername = await userModel.getUserByUsername(input.username);
+      if (!user && !userByUsername) {
         const password = await context.app.hash(input.password);
+
         await userModel.createUser({ ...input, password });
         return {
           ok: true,
+        };
+      } else if (user) {
+        return {
+          ok: false,
+          errors: [
+            {
+              __typename: "ErrorMessage",
+              message: "Already registered",
+            },
+          ],
+        };
+      } else if (userByUsername) {
+        return {
+          ok: false,
+          errors: [
+            {
+              __typename: "FormError",
+              message: "Username already take",
+              fieldName: "username",
+            },
+          ],
         };
       } else {
         return {
@@ -54,7 +77,7 @@ export function authService(context: MercuriusContext) {
           errors: [
             {
               __typename: "ErrorMessage",
-              message: "Already registered",
+              message: "Unknown error",
             },
           ],
         };
@@ -76,8 +99,10 @@ export function authService(context: MercuriusContext) {
         if (await context.app.hashCompare(input.password, user.password)) {
           const jwt = await context.app.jwt.sign({ email: user.email });
 
+          // TODo user const
           context.reply.setCookie("user-jwt", jwt, {
             httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
           });
 
           return {
