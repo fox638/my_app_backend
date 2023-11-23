@@ -1,3 +1,7 @@
 extend type Query {
   me: User @auth
 }
+
+extend type User {
+  boards: [BoardInfo]
+}

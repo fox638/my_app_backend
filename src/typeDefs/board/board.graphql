@@ -1,0 +1,37 @@
+type Board {
+  id: Int
+  title: String
+}
+
+type BoardInfo {
+  boardId: Int!
+  board: Board!
+}
+
+extend type Mutation {
+  board: BoardMutations @auth
+}
+
+input CreateBoardInput {
+  title: String!
+}
+
+type CreateBoardResponse {
+  ok: Boolean!
+  board: BoardInfo
+}
+
+input DeleteBoardInput {
+  boardId: Int!
+}
+
+type DeleteBoardResponse {
+  ok: Boolean!
+  boardId: Int
+  query: Query
+}
+
+type BoardMutations {
+  createBoard(input: CreateBoardInput!): CreateBoardResponse!
+  deleteBoard(input: DeleteBoardInput!): DeleteBoardResponse
+}

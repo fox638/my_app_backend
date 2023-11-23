@@ -54,6 +54,55 @@ export type AuthSignUpResponse = {
   ok: Scalars['Boolean']['output'];
 };
 
+export type Board = {
+  __typename?: 'Board';
+  id?: Maybe<Scalars['Int']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type BoardInfo = {
+  __typename?: 'BoardInfo';
+  board: Board;
+  boardId: Scalars['Int']['output'];
+};
+
+export type BoardMutations = {
+  __typename?: 'BoardMutations';
+  createBoard: CreateBoardResponse;
+  deleteBoard?: Maybe<DeleteBoardResponse>;
+};
+
+
+export type BoardMutationsCreateBoardArgs = {
+  input: CreateBoardInput;
+};
+
+
+export type BoardMutationsDeleteBoardArgs = {
+  input: DeleteBoardInput;
+};
+
+export type CreateBoardInput = {
+  title: Scalars['String']['input'];
+};
+
+export type CreateBoardResponse = {
+  __typename?: 'CreateBoardResponse';
+  board?: Maybe<BoardInfo>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type DeleteBoardInput = {
+  boardId: Scalars['Int']['input'];
+};
+
+export type DeleteBoardResponse = {
+  __typename?: 'DeleteBoardResponse';
+  boardId?: Maybe<Scalars['Int']['output']>;
+  ok: Scalars['Boolean']['output'];
+  query?: Maybe<Query>;
+};
+
 export type ErrorMessage = {
   __typename?: 'ErrorMessage';
   message?: Maybe<Scalars['String']['output']>;
@@ -70,6 +119,7 @@ export type FormError = {
 export type Mutation = {
   __typename?: 'Mutation';
   auth: AuthMutations;
+  board?: Maybe<BoardMutations>;
 };
 
 export type Query = {
@@ -79,6 +129,7 @@ export type Query = {
 
 export type User = {
   __typename?: 'User';
+  boards?: Maybe<Array<Maybe<BoardInfo>>>;
   email?: Maybe<Scalars['String']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
