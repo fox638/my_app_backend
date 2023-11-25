@@ -5,6 +5,7 @@ import {
   AuthLoginResponse,
   AuthSignUpInput,
   AuthSignUpResponse,
+  ErrorMessage,
   FormError,
 } from "../types/resolver-gql";
 import Joy from "joi";
@@ -117,7 +118,7 @@ export function authService(context: MercuriusContext) {
         user: null,
         errors: [
           {
-            __typename: "ErrorMessage",
+            __typename: "ErrorMessage" as ErrorMessage["__typename"],
             message: "invalid credentials",
           },
         ],
