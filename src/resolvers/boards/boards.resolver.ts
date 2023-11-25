@@ -1,4 +1,5 @@
 import { User } from "@/generate";
+import { BoardMutationsResolvers, Resolvers } from "@/graphql/generated";
 import { boardService } from "@/services/board.service";
 import { BoardInfo, BoardMutationsCreateBoardArgs } from "@/types/resolver-gql";
 import { IResolvers } from "mercurius";
@@ -10,7 +11,7 @@ export default {
     },
   },
   BoardMutations: {
-    createBoard: (_, args: BoardMutationsCreateBoardArgs, context) =>
+    createBoard: (_, args, context) =>
       boardService(context).createBoard(args.input),
     deleteBoard: (_, args, context) => {
       return boardService(context).deleteBoard(
@@ -21,7 +22,7 @@ export default {
   },
   BoardInfo: {
     // TODO add types
-    board: ({ boardId }: BoardInfo, _, context) =>
+    board: ({ boardId }, _, context) =>
       //TODO add loaders
       boardService(context).getBoard(boardId),
   },

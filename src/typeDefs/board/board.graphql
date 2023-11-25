@@ -13,7 +13,7 @@ type BoardInfo {
 }
 
 extend type Mutation {
-  board: BoardMutations @auth
+  board: BoardMutations! @auth
 }
 
 input CreateBoardInput {
@@ -37,5 +37,5 @@ type DeleteBoardResponse {
 
 type BoardMutations {
   createBoard(input: CreateBoardInput!): CreateBoardResponse!
-  deleteBoard(input: DeleteBoardInput!): DeleteBoardResponse
+  deleteBoard(input: DeleteBoardInput!): DeleteBoardResponse!
 }

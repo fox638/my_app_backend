@@ -83,7 +83,7 @@ export function authService(context: MercuriusContext) {
         };
       }
     },
-    login: async (input: AuthLoginInput): Promise<AuthLoginResponse> => {
+    login: async (input: AuthLoginInput) => {
       const { error } = loginInputSchema.validate(input);
       if (error) {
         return {

@@ -1,5 +1,6 @@
 import fp from "fastify-plugin";
 import { FastifyPluginAsync } from "fastify/types/plugin";
+import { buildSchema } from "graphql";
 import mercurius from "mercurius";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { loadFiles } from "@graphql-tools/load-files";
@@ -7,6 +8,11 @@ import path from "node:path";
 import mercuriusAuth from "mercurius-auth";
 import { usersModel } from "../../model/users";
 import { ServerConfig } from "../../config";
+import {
+  codegenMercurius,
+  CodegenMercuriusOptions,
+  loadSchemaFiles,
+} from "mercurius-codegen";
 import mercuriusValidation from "mercurius-validation";
 
 const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
@@ -76,6 +82,16 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   //     },
   //   },
   // });
+
+  const codegenMercuriusOptions: CodegenMercuriusOptions = {
+    targetPath: "./src/graphql/generated.ts",
+    operationsGlob: "./src/graphql/operations/*.gql",
+    watchOptions: {
+      enabled: process.env.NODE_ENV === "development",
+    },
+  };
+
+  codegenMercurius(server, codegenMercuriusOptions).catch(console.error);
 };
 
 export default fp(graphqlMercurius);
