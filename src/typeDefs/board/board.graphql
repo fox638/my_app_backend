@@ -1,6 +1,6 @@
 type Board {
-  id: Int
-  title: String
+  id: Int!
+  title: String!
 }
 
 type BoardInfo {

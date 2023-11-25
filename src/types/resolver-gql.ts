@@ -56,8 +56,8 @@ export type AuthSignUpResponse = {
 
 export type Board = {
   __typename?: 'Board';
-  id?: Maybe<Scalars['Int']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type BoardInfo = {

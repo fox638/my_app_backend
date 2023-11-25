@@ -44,7 +44,7 @@ export function boardService(context: MercuriusContext) {
           ok: true,
           board: {
             boardId,
-            board: {},
+            board: {} as Board,
           },
         };
       } catch (error) {
