@@ -1,3 +1,7 @@
+extend type User {
+  boardsInfo: [BoardInfo!]!
+}
+
 type Board {
   id: Int!
   title: String!

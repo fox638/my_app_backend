@@ -1,27 +1,27 @@
 import { CreateBoardInput } from "@/types/resolver-gql";
 import { Knex } from "knex";
-import { Board } from "types";
+import { Board } from "@/generate/db";
 
 export function boardModel(knex: Knex) {
   return {
-    getBoardsByUserId(userId: number): Promise<Board[]> {
+    getBoardsByUserId(userId: number) {
       return knex("board").where({ user_id: userId });
     },
-    async getUserBordsId(userId: number): Promise<{ id: number }[]> {
+    async getUserBordsId(userId: number) {
       const boards = await knex("board")
         .select("id")
         .where({ user_id: userId });
 
       return boards;
     },
-    createBoard(userId: number, input: CreateBoardInput): Promise<number> {
+    createBoard(userId: number, input: CreateBoardInput) {
       console.log("createBoard", userId, input);
       return knex("board")
         .insert({ user_id: userId, title: input.title })
         .returning(["id"])
         .then((resp) => resp[0]?.id);
     },
-    getBoardById(boardId: number): Promise<Board> {
+    getBoardById(boardId: number) {
       return knex("board").where({ id: boardId }).first();
     },
     deleteBoardById(boardId: number, userId: number) {

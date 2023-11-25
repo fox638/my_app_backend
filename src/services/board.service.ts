@@ -1,7 +1,7 @@
 import { boardModel } from "@/model/boards";
 import { CreateBoardInput, CreateBoardResponse } from "@/types/resolver-gql";
 import { MercuriusContext } from "mercurius";
-import { Board, Users as User } from "types";
+import { Board, Users as User } from "@/generate/db";
 
 export function boardService(context: MercuriusContext) {
   return {
@@ -54,7 +54,7 @@ export function boardService(context: MercuriusContext) {
         };
       }
     },
-    getBoard: async (boardId: number): Promise<Board> => {
+    getBoard: async (boardId: number) => {
       return boardModel(context.app.knex).getBoardById(boardId);
     },
     deleteBoard: async (
