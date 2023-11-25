@@ -8,11 +8,7 @@ import path from "node:path";
 import mercuriusAuth from "mercurius-auth";
 import { usersModel } from "../../model/users";
 import { ServerConfig } from "../../config";
-import {
-  codegenMercurius,
-  CodegenMercuriusOptions,
-  loadSchemaFiles,
-} from "mercurius-codegen";
+import { codegenMercurius, CodegenMercuriusOptions } from "mercurius-codegen";
 import mercuriusValidation from "mercurius-validation";
 
 const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
@@ -84,8 +80,8 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   // });
 
   const codegenMercuriusOptions: CodegenMercuriusOptions = {
-    targetPath: "./src/graphql/generated.ts",
-    operationsGlob: "./src/graphql/operations/*.gql",
+    targetPath: "./src/generate/graphql.ts",
+    // operationsGlob: "./src/graphql/operations/*.gql",
     watchOptions: {
       enabled: process.env.NODE_ENV === "development",
     },

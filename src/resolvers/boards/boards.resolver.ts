@@ -1,7 +1,5 @@
 import { User } from "@/generate";
-import { BoardMutationsResolvers, Resolvers } from "@/graphql/generated";
 import { boardService } from "@/services/board.service";
-import { BoardInfo, BoardMutationsCreateBoardArgs } from "@/types/resolver-gql";
 import { IResolvers } from "mercurius";
 
 export default {
@@ -21,7 +19,6 @@ export default {
     },
   },
   BoardInfo: {
-    // TODO add types
     board: ({ boardId }, _, context) =>
       //TODO add loaders
       boardService(context).getBoard(boardId),
