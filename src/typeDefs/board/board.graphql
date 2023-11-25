@@ -1,5 +1,5 @@
 extend type User {
-  boardsInfo: [BoardInfo!]!
+  boards: [BoardInfo!]!
 }
 
 type Board {
@@ -35,7 +35,18 @@ type DeleteBoardResponse {
   query: Query
 }
 
+input UpdateBoardInput {
+  boardId: Int!
+  title: String
+}
+
+type UpdateBoardResponse {
+  ok: Boolean!
+  board: Board!
+}
+
 type BoardMutations {
   createBoard(input: CreateBoardInput!): CreateBoardResponse!
+  updateBoard(input: UpdateBoardInput!): UpdateBoardResponse!
   deleteBoard(input: DeleteBoardInput!): DeleteBoardResponse!
 }

@@ -27,5 +27,12 @@ export function boardModel(knex: Knex) {
     deleteBoardById(boardId: number, userId: number) {
       return knex("board").where({ id: boardId, user_id: userId }).del();
     },
+    updateBoard(board: Pick<Board, "id"> & Partial<Board>) {
+      return knex("board")
+        .update(board)
+        .where({ id: board.id })
+        .returning("*")
+        .then((resp) => resp[0]);
+    },
   };
 }

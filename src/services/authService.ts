@@ -115,7 +115,7 @@ export function authService(context: MercuriusContext) {
 
       return {
         ok: false,
-        user: null,
+        user: undefined,
         errors: [
           {
             __typename: "ErrorMessage" as ErrorMessage["__typename"],

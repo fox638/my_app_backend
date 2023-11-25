@@ -4,7 +4,7 @@ import { IResolvers } from "mercurius";
 
 export default {
   User: {
-    boardsInfo: (_, __, context) => {
+    boards: (_, __, context) => {
       return boardService(context).getUserBoardIds(context?.auth?.user as User);
     },
   },
@@ -16,6 +16,9 @@ export default {
         args.input.boardId as number,
         (context.auth?.user as User)?.id
       );
+    },
+    updateBoard: (_, args, context) => {
+      return boardService(context).updateBoard(args.input);
     },
   },
   BoardInfo: {

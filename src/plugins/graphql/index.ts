@@ -25,6 +25,16 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
     ),
   });
 
+  const codegenMercuriusOptions: CodegenMercuriusOptions = {
+    targetPath: "./src/generate/graphql.ts",
+    // operationsGlob: "./src/graphql/operations/*.gql",
+    watchOptions: {
+      enabled: process.env.NODE_ENV === "development",
+    },
+  };
+
+  codegenMercurius(server, codegenMercuriusOptions).catch(console.error);
+
   await server.register(mercurius, {
     schema,
     graphiql: true,
@@ -78,16 +88,6 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   //     },
   //   },
   // });
-
-  const codegenMercuriusOptions: CodegenMercuriusOptions = {
-    targetPath: "./src/generate/graphql.ts",
-    // operationsGlob: "./src/graphql/operations/*.gql",
-    watchOptions: {
-      enabled: process.env.NODE_ENV === "development",
-    },
-  };
-
-  codegenMercurius(server, codegenMercuriusOptions).catch(console.error);
 };
 
 export default fp(graphqlMercurius);

@@ -2,6 +2,8 @@ import { boardModel } from "@/model/boards";
 import { CreateBoardInput, CreateBoardResponse } from "@/types/resolver-gql";
 import { MercuriusContext } from "mercurius";
 import { Board, Users as User } from "@/generate/db";
+import { UpdateBoardInput } from "@/generate/graphql";
+import { onlyNotNullValue } from "@/utils/onlyTrueValue";
 
 export function boardService(context: MercuriusContext) {
   return {
@@ -77,6 +79,25 @@ export function boardService(context: MercuriusContext) {
           ok: false,
           boardId: null,
           query: {},
+        };
+      }
+    },
+    updateBoard: async ({ boardId, ...input }: UpdateBoardInput) => {
+      try {
+        const board = await boardModel(context.app.knex).updateBoard({
+          id: boardId,
+          ...onlyNotNullValue(input),
+        });
+
+        return {
+          ok: true,
+          board,
+        };
+        //TODO handle error
+      } catch {
+        return {
+          ok: false,
+          board: null,
         };
       }
     },

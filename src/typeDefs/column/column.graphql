@@ -1,0 +1,51 @@
+extend type Board {
+  columns: [BoardColumn!]!
+}
+
+type BoardColumn {
+  id: Int!
+  title: String!
+  boardId: Int!
+  order: Int!
+}
+
+extend type Mutation {
+  column: ColumnMutations! @auth
+}
+
+input CreateColumnInput {
+  title: String!
+  boardId: Int!
+  order: Int
+}
+
+type CreateColumnResponse {
+  ok: Boolean!
+  column: BoardColumn
+}
+
+input UpdateColumnInput {
+  columnId: Int!
+  title: String
+  order: Int
+}
+
+type UpdateColumnResponse {
+  ok: Boolean!
+  column: BoardColumn
+}
+
+input DeleteColumnInput {
+  columnId: Int!
+}
+
+type DeleteColumnResponse {
+  ok: Boolean!
+  columnId: Int
+}
+
+type ColumnMutations {
+  createColumn(input: CreateColumnInput!): CreateColumnResponse!
+  updateColumn(input: UpdateColumnInput!): UpdateColumnResponse!
+  deleteColumn(input: DeleteColumnInput!): DeleteColumnResponse!
+}
