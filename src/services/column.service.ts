@@ -37,10 +37,12 @@ export function columnService(context: MercuriusContext) {
     },
 
     updateColumn: async ({ columnId, ...input }: UpdateColumnInput) => {
-      const column = await columnModel(context.app.knex).updateColumn({
-        id: columnId,
-        ...onlyNotNullValue(input),
-      });
+      try {
+        const column = await columnModel(context.app.knex).updateColumn({
+          id: columnId,
+          ...onlyNotNullValue(input),
+        });
+      } catch (error) {}
     },
   };
 }
