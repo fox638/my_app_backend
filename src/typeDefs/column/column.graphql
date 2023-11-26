@@ -16,12 +16,13 @@ extend type Mutation {
 input CreateColumnInput {
   title: String!
   boardId: Int!
-  order: Int
+  order: Int!
 }
 
 type CreateColumnResponse {
   ok: Boolean!
   column: BoardColumn
+  error: ErrorMessage
 }
 
 input UpdateColumnInput {
@@ -33,6 +34,7 @@ input UpdateColumnInput {
 type UpdateColumnResponse {
   ok: Boolean!
   column: BoardColumn
+  error: ErrorMessage
 }
 
 input DeleteColumnInput {

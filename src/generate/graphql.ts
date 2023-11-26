@@ -40,23 +40,136 @@ export type Query = {
 
 export type Mutation = {
   __typename?: "Mutation";
-  board: BoardMutations;
   auth: AuthMutations;
   column: ColumnMutations;
+  board: BoardMutations;
+};
+
+export type AuthLoginInput = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+};
+
+export type AuthSignUpInput = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type AuthLoginResponse = {
+  __typename?: "AuthLoginResponse";
+  ok: Scalars["Boolean"];
+  user?: Maybe<User>;
+  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
+};
+
+export type AuthSignUpResponse = {
+  __typename?: "AuthSignUpResponse";
+  ok: Scalars["Boolean"];
+  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
+};
+
+export type AuthMutations = {
+  __typename?: "AuthMutations";
+  login: AuthLoginResponse;
+  signUp: AuthSignUpResponse;
+};
+
+export type AuthMutationsloginArgs = {
+  input: AuthLoginInput;
+};
+
+export type AuthMutationssignUpArgs = {
+  input: AuthSignUpInput;
+};
+
+export type FormError = {
+  __typename?: "FormError";
+  fieldName?: Maybe<Scalars["String"]>;
+  message?: Maybe<Scalars["String"]>;
+};
+
+export type ErrorMessage = {
+  __typename?: "ErrorMessage";
+  message?: Maybe<Scalars["String"]>;
+};
+
+export type ErrorUnion = FormError | ErrorMessage;
+
+export type Board = {
+  __typename?: "Board";
+  columns: Array<BoardColumn>;
+  id: Scalars["Int"];
+  title: Scalars["String"];
+};
+
+export type BoardColumn = {
+  __typename?: "BoardColumn";
+  id: Scalars["Int"];
+  title: Scalars["String"];
+  boardId: Scalars["Int"];
+  order: Scalars["Int"];
+};
+
+export type CreateColumnInput = {
+  title: Scalars["String"];
+  boardId: Scalars["Int"];
+  order: Scalars["Int"];
+};
+
+export type CreateColumnResponse = {
+  __typename?: "CreateColumnResponse";
+  ok: Scalars["Boolean"];
+  column?: Maybe<BoardColumn>;
+  error?: Maybe<ErrorMessage>;
+};
+
+export type UpdateColumnInput = {
+  columnId: Scalars["Int"];
+  title?: InputMaybe<Scalars["String"]>;
+  order?: InputMaybe<Scalars["Int"]>;
+};
+
+export type UpdateColumnResponse = {
+  __typename?: "UpdateColumnResponse";
+  ok: Scalars["Boolean"];
+  column?: Maybe<BoardColumn>;
+};
+
+export type DeleteColumnInput = {
+  columnId: Scalars["Int"];
+};
+
+export type DeleteColumnResponse = {
+  __typename?: "DeleteColumnResponse";
+  ok: Scalars["Boolean"];
+  columnId?: Maybe<Scalars["Int"]>;
+};
+
+export type ColumnMutations = {
+  __typename?: "ColumnMutations";
+  createColumn: CreateColumnResponse;
+  updateColumn: UpdateColumnResponse;
+  deleteColumn: DeleteColumnResponse;
+};
+
+export type ColumnMutationscreateColumnArgs = {
+  input: CreateColumnInput;
+};
+
+export type ColumnMutationsupdateColumnArgs = {
+  input: UpdateColumnInput;
+};
+
+export type ColumnMutationsdeleteColumnArgs = {
+  input: DeleteColumnInput;
 };
 
 export type User = {
   __typename?: "User";
-  boards: Array<BoardInfo>;
   email?: Maybe<Scalars["String"]>;
   username?: Maybe<Scalars["String"]>;
-};
-
-export type Board = {
-  __typename?: "Board";
-  id: Scalars["Int"];
-  title: Scalars["String"];
-  columns: Array<BoardColumn>;
+  boards: Array<BoardInfo>;
 };
 
 export type BoardInfo = {
@@ -114,118 +227,6 @@ export type BoardMutationsupdateBoardArgs = {
 
 export type BoardMutationsdeleteBoardArgs = {
   input: DeleteBoardInput;
-};
-
-export type FormError = {
-  __typename?: "FormError";
-  fieldName?: Maybe<Scalars["String"]>;
-  message?: Maybe<Scalars["String"]>;
-};
-
-export type ErrorMessage = {
-  __typename?: "ErrorMessage";
-  message?: Maybe<Scalars["String"]>;
-};
-
-export type ErrorUnion = FormError | ErrorMessage;
-
-export type AuthLoginInput = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-};
-
-export type AuthSignUpInput = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-  username: Scalars["String"];
-};
-
-export type AuthLoginResponse = {
-  __typename?: "AuthLoginResponse";
-  ok: Scalars["Boolean"];
-  user?: Maybe<User>;
-  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
-};
-
-export type AuthSignUpResponse = {
-  __typename?: "AuthSignUpResponse";
-  ok: Scalars["Boolean"];
-  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
-};
-
-export type AuthMutations = {
-  __typename?: "AuthMutations";
-  login: AuthLoginResponse;
-  signUp: AuthSignUpResponse;
-};
-
-export type AuthMutationsloginArgs = {
-  input: AuthLoginInput;
-};
-
-export type AuthMutationssignUpArgs = {
-  input: AuthSignUpInput;
-};
-
-export type BoardColumn = {
-  __typename?: "BoardColumn";
-  id: Scalars["Int"];
-  title: Scalars["String"];
-  boardId: Scalars["Int"];
-  order: Scalars["Int"];
-};
-
-export type CreateColumnInput = {
-  title: Scalars["String"];
-  boardId: Scalars["Int"];
-  order?: InputMaybe<Scalars["Int"]>;
-};
-
-export type CreateColumnResponse = {
-  __typename?: "CreateColumnResponse";
-  ok: Scalars["Boolean"];
-  column?: Maybe<BoardColumn>;
-};
-
-export type UpdateColumnInput = {
-  columnId: Scalars["Int"];
-  title?: InputMaybe<Scalars["String"]>;
-  order?: InputMaybe<Scalars["Int"]>;
-};
-
-export type UpdateColumnResponse = {
-  __typename?: "UpdateColumnResponse";
-  ok: Scalars["Boolean"];
-  column?: Maybe<BoardColumn>;
-};
-
-export type DeleteColumnInput = {
-  columnId: Scalars["Int"];
-};
-
-export type DeleteColumnResponse = {
-  __typename?: "DeleteColumnResponse";
-  ok: Scalars["Boolean"];
-  columnId?: Maybe<Scalars["Int"]>;
-};
-
-export type ColumnMutations = {
-  __typename?: "ColumnMutations";
-  createColumn: CreateColumnResponse;
-  updateColumn: UpdateColumnResponse;
-  deleteColumn: DeleteColumnResponse;
-};
-
-export type ColumnMutationscreateColumnArgs = {
-  input: CreateColumnInput;
-};
-
-export type ColumnMutationsupdateColumnArgs = {
-  input: UpdateColumnInput;
-};
-
-export type ColumnMutationsdeleteColumnArgs = {
-  input: DeleteColumnInput;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -340,35 +341,26 @@ export type ResolversUnionParentTypes = {
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<User>;
-  String: ResolverTypeWrapper<Scalars["String"]>;
-  Board: ResolverTypeWrapper<Board>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
-  BoardInfo: ResolverTypeWrapper<BoardInfo>;
-  CreateBoardInput: CreateBoardInput;
-  CreateBoardResponse: ResolverTypeWrapper<CreateBoardResponse>;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
-  DeleteBoardInput: DeleteBoardInput;
-  DeleteBoardResponse: ResolverTypeWrapper<DeleteBoardResponse>;
-  UpdateBoardInput: UpdateBoardInput;
-  UpdateBoardResponse: ResolverTypeWrapper<UpdateBoardResponse>;
-  BoardMutations: ResolverTypeWrapper<BoardMutations>;
-  FormError: ResolverTypeWrapper<FormError>;
-  ErrorMessage: ResolverTypeWrapper<ErrorMessage>;
-  ErrorUnion: ResolverTypeWrapper<ResolversUnionTypes["ErrorUnion"]>;
   AuthLoginInput: AuthLoginInput;
+  String: ResolverTypeWrapper<Scalars["String"]>;
   AuthSignUpInput: AuthSignUpInput;
   AuthLoginResponse: ResolverTypeWrapper<
     Omit<AuthLoginResponse, "errors"> & {
       errors?: Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>;
     }
   >;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   AuthSignUpResponse: ResolverTypeWrapper<
     Omit<AuthSignUpResponse, "errors"> & {
       errors?: Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>;
     }
   >;
   AuthMutations: ResolverTypeWrapper<AuthMutations>;
+  FormError: ResolverTypeWrapper<FormError>;
+  ErrorMessage: ResolverTypeWrapper<ErrorMessage>;
+  ErrorUnion: ResolverTypeWrapper<ResolversUnionTypes["ErrorUnion"]>;
+  Board: ResolverTypeWrapper<Board>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   BoardColumn: ResolverTypeWrapper<BoardColumn>;
   CreateColumnInput: CreateColumnInput;
   CreateColumnResponse: ResolverTypeWrapper<CreateColumnResponse>;
@@ -377,37 +369,37 @@ export type ResolversTypes = {
   DeleteColumnInput: DeleteColumnInput;
   DeleteColumnResponse: ResolverTypeWrapper<DeleteColumnResponse>;
   ColumnMutations: ResolverTypeWrapper<ColumnMutations>;
+  User: ResolverTypeWrapper<User>;
+  BoardInfo: ResolverTypeWrapper<BoardInfo>;
+  CreateBoardInput: CreateBoardInput;
+  CreateBoardResponse: ResolverTypeWrapper<CreateBoardResponse>;
+  DeleteBoardInput: DeleteBoardInput;
+  DeleteBoardResponse: ResolverTypeWrapper<DeleteBoardResponse>;
+  UpdateBoardInput: UpdateBoardInput;
+  UpdateBoardResponse: ResolverTypeWrapper<UpdateBoardResponse>;
+  BoardMutations: ResolverTypeWrapper<BoardMutations>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
   Mutation: {};
-  User: User;
-  String: Scalars["String"];
-  Board: Board;
-  Int: Scalars["Int"];
-  BoardInfo: BoardInfo;
-  CreateBoardInput: CreateBoardInput;
-  CreateBoardResponse: CreateBoardResponse;
-  Boolean: Scalars["Boolean"];
-  DeleteBoardInput: DeleteBoardInput;
-  DeleteBoardResponse: DeleteBoardResponse;
-  UpdateBoardInput: UpdateBoardInput;
-  UpdateBoardResponse: UpdateBoardResponse;
-  BoardMutations: BoardMutations;
-  FormError: FormError;
-  ErrorMessage: ErrorMessage;
-  ErrorUnion: ResolversUnionParentTypes["ErrorUnion"];
   AuthLoginInput: AuthLoginInput;
+  String: Scalars["String"];
   AuthSignUpInput: AuthSignUpInput;
   AuthLoginResponse: Omit<AuthLoginResponse, "errors"> & {
     errors?: Maybe<Array<Maybe<ResolversParentTypes["ErrorUnion"]>>>;
   };
+  Boolean: Scalars["Boolean"];
   AuthSignUpResponse: Omit<AuthSignUpResponse, "errors"> & {
     errors?: Maybe<Array<Maybe<ResolversParentTypes["ErrorUnion"]>>>;
   };
   AuthMutations: AuthMutations;
+  FormError: FormError;
+  ErrorMessage: ErrorMessage;
+  ErrorUnion: ResolversUnionParentTypes["ErrorUnion"];
+  Board: Board;
+  Int: Scalars["Int"];
   BoardColumn: BoardColumn;
   CreateColumnInput: CreateColumnInput;
   CreateColumnResponse: CreateColumnResponse;
@@ -416,6 +408,15 @@ export type ResolversParentTypes = {
   DeleteColumnInput: DeleteColumnInput;
   DeleteColumnResponse: DeleteColumnResponse;
   ColumnMutations: ColumnMutations;
+  User: User;
+  BoardInfo: BoardInfo;
+  CreateBoardInput: CreateBoardInput;
+  CreateBoardResponse: CreateBoardResponse;
+  DeleteBoardInput: DeleteBoardInput;
+  DeleteBoardResponse: DeleteBoardResponse;
+  UpdateBoardInput: UpdateBoardInput;
+  UpdateBoardResponse: UpdateBoardResponse;
+  BoardMutations: BoardMutations;
 };
 
 export type authDirectiveArgs = {};
@@ -440,24 +441,93 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
 > = {
-  board?: Resolver<ResolversTypes["BoardMutations"], ParentType, ContextType>;
   auth?: Resolver<ResolversTypes["AuthMutations"], ParentType, ContextType>;
   column?: Resolver<ResolversTypes["ColumnMutations"], ParentType, ContextType>;
+  board?: Resolver<ResolversTypes["BoardMutations"], ParentType, ContextType>;
 };
 
-export type UserResolvers<
+export type AuthLoginResponseResolvers<
   ContextType = MercuriusContext,
   ParentType extends
-    ResolversParentTypes["User"] = ResolversParentTypes["User"],
+    ResolversParentTypes["AuthLoginResponse"] = ResolversParentTypes["AuthLoginResponse"],
 > = {
-  boards?: Resolver<
-    Array<ResolversTypes["BoardInfo"]>,
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
     ParentType,
     ContextType
   >;
-  email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AuthSignUpResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["AuthSignUpResponse"] = ResolversParentTypes["AuthSignUpResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
+    ParentType,
+    ContextType
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AuthMutationsResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["AuthMutations"] = ResolversParentTypes["AuthMutations"],
+> = {
+  login?: Resolver<
+    ResolversTypes["AuthLoginResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<AuthMutationsloginArgs, "input">
+  >;
+  signUp?: Resolver<
+    ResolversTypes["AuthSignUpResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<AuthMutationssignUpArgs, "input">
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FormErrorResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["FormError"] = ResolversParentTypes["FormError"],
+> = {
+  fieldName?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  message?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ErrorMessageResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["ErrorMessage"] = ResolversParentTypes["ErrorMessage"],
+> = {
+  message?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ErrorUnionResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["ErrorUnion"] = ResolversParentTypes["ErrorUnion"],
+> = {
+  resolveType: TypeResolveFn<
+    "FormError" | "ErrorMessage",
+    ParentType,
+    ContextType
+  >;
 };
 
 export type BoardResolvers<
@@ -465,10 +535,106 @@ export type BoardResolvers<
   ParentType extends
     ResolversParentTypes["Board"] = ResolversParentTypes["Board"],
 > = {
-  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   columns?: Resolver<
     Array<ResolversTypes["BoardColumn"]>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BoardColumnResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["BoardColumn"] = ResolversParentTypes["BoardColumn"],
+> = {
+  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  boardId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  order?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateColumnResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["CreateColumnResponse"] = ResolversParentTypes["CreateColumnResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  column?: Resolver<
+    Maybe<ResolversTypes["BoardColumn"]>,
+    ParentType,
+    ContextType
+  >;
+  error?: Resolver<
+    Maybe<ResolversTypes["ErrorMessage"]>,
+    ParentType,
+    ContextType
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateColumnResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["UpdateColumnResponse"] = ResolversParentTypes["UpdateColumnResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  column?: Resolver<
+    Maybe<ResolversTypes["BoardColumn"]>,
+    ParentType,
+    ContextType
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteColumnResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["DeleteColumnResponse"] = ResolversParentTypes["DeleteColumnResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  columnId?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ColumnMutationsResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["ColumnMutations"] = ResolversParentTypes["ColumnMutations"],
+> = {
+  createColumn?: Resolver<
+    ResolversTypes["CreateColumnResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<ColumnMutationscreateColumnArgs, "input">
+  >;
+  updateColumn?: Resolver<
+    ResolversTypes["UpdateColumnResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<ColumnMutationsupdateColumnArgs, "input">
+  >;
+  deleteColumn?: Resolver<
+    ResolversTypes["DeleteColumnResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<ColumnMutationsdeleteColumnArgs, "input">
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["User"] = ResolversParentTypes["User"],
+> = {
+  email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  boards?: Resolver<
+    Array<ResolversTypes["BoardInfo"]>,
     ParentType,
     ContextType
   >;
@@ -542,187 +708,27 @@ export type BoardMutationsResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type FormErrorResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["FormError"] = ResolversParentTypes["FormError"],
-> = {
-  fieldName?: Resolver<
-    Maybe<ResolversTypes["String"]>,
-    ParentType,
-    ContextType
-  >;
-  message?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ErrorMessageResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["ErrorMessage"] = ResolversParentTypes["ErrorMessage"],
-> = {
-  message?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ErrorUnionResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["ErrorUnion"] = ResolversParentTypes["ErrorUnion"],
-> = {
-  resolveType: TypeResolveFn<
-    "FormError" | "ErrorMessage",
-    ParentType,
-    ContextType
-  >;
-};
-
-export type AuthLoginResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["AuthLoginResponse"] = ResolversParentTypes["AuthLoginResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-  errors?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AuthSignUpResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["AuthSignUpResponse"] = ResolversParentTypes["AuthSignUpResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  errors?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AuthMutationsResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["AuthMutations"] = ResolversParentTypes["AuthMutations"],
-> = {
-  login?: Resolver<
-    ResolversTypes["AuthLoginResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<AuthMutationsloginArgs, "input">
-  >;
-  signUp?: Resolver<
-    ResolversTypes["AuthSignUpResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<AuthMutationssignUpArgs, "input">
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BoardColumnResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["BoardColumn"] = ResolversParentTypes["BoardColumn"],
-> = {
-  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  boardId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  order?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateColumnResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["CreateColumnResponse"] = ResolversParentTypes["CreateColumnResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  column?: Resolver<
-    Maybe<ResolversTypes["BoardColumn"]>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateColumnResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["UpdateColumnResponse"] = ResolversParentTypes["UpdateColumnResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  column?: Resolver<
-    Maybe<ResolversTypes["BoardColumn"]>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeleteColumnResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["DeleteColumnResponse"] = ResolversParentTypes["DeleteColumnResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  columnId?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ColumnMutationsResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["ColumnMutations"] = ResolversParentTypes["ColumnMutations"],
-> = {
-  createColumn?: Resolver<
-    ResolversTypes["CreateColumnResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<ColumnMutationscreateColumnArgs, "input">
-  >;
-  updateColumn?: Resolver<
-    ResolversTypes["UpdateColumnResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<ColumnMutationsupdateColumnArgs, "input">
-  >;
-  deleteColumn?: Resolver<
-    ResolversTypes["DeleteColumnResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<ColumnMutationsdeleteColumnArgs, "input">
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = MercuriusContext> = {
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
-  Board?: BoardResolvers<ContextType>;
-  BoardInfo?: BoardInfoResolvers<ContextType>;
-  CreateBoardResponse?: CreateBoardResponseResolvers<ContextType>;
-  DeleteBoardResponse?: DeleteBoardResponseResolvers<ContextType>;
-  UpdateBoardResponse?: UpdateBoardResponseResolvers<ContextType>;
-  BoardMutations?: BoardMutationsResolvers<ContextType>;
-  FormError?: FormErrorResolvers<ContextType>;
-  ErrorMessage?: ErrorMessageResolvers<ContextType>;
-  ErrorUnion?: ErrorUnionResolvers<ContextType>;
   AuthLoginResponse?: AuthLoginResponseResolvers<ContextType>;
   AuthSignUpResponse?: AuthSignUpResponseResolvers<ContextType>;
   AuthMutations?: AuthMutationsResolvers<ContextType>;
+  FormError?: FormErrorResolvers<ContextType>;
+  ErrorMessage?: ErrorMessageResolvers<ContextType>;
+  ErrorUnion?: ErrorUnionResolvers<ContextType>;
+  Board?: BoardResolvers<ContextType>;
   BoardColumn?: BoardColumnResolvers<ContextType>;
   CreateColumnResponse?: CreateColumnResponseResolvers<ContextType>;
   UpdateColumnResponse?: UpdateColumnResponseResolvers<ContextType>;
   DeleteColumnResponse?: DeleteColumnResponseResolvers<ContextType>;
   ColumnMutations?: ColumnMutationsResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
+  BoardInfo?: BoardInfoResolvers<ContextType>;
+  CreateBoardResponse?: CreateBoardResponseResolvers<ContextType>;
+  DeleteBoardResponse?: DeleteBoardResponseResolvers<ContextType>;
+  UpdateBoardResponse?: UpdateBoardResponseResolvers<ContextType>;
+  BoardMutations?: BoardMutationsResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = MercuriusContext> = {
@@ -751,16 +757,135 @@ export interface Loaders<
     reply: import("fastify").FastifyReply;
   },
 > {
-  User?: {
-    boards?: LoaderResolver<Array<BoardInfo>, User, {}, TContext>;
-    email?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
-    username?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
+  AuthLoginResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], AuthLoginResponse, {}, TContext>;
+    user?: LoaderResolver<Maybe<User>, AuthLoginResponse, {}, TContext>;
+    errors?: LoaderResolver<
+      Maybe<Array<Maybe<ErrorUnion>>>,
+      AuthLoginResponse,
+      {},
+      TContext
+    >;
+  };
+
+  AuthSignUpResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], AuthSignUpResponse, {}, TContext>;
+    errors?: LoaderResolver<
+      Maybe<Array<Maybe<ErrorUnion>>>,
+      AuthSignUpResponse,
+      {},
+      TContext
+    >;
+  };
+
+  AuthMutations?: {
+    login?: LoaderResolver<
+      AuthLoginResponse,
+      AuthMutations,
+      AuthMutationsloginArgs,
+      TContext
+    >;
+    signUp?: LoaderResolver<
+      AuthSignUpResponse,
+      AuthMutations,
+      AuthMutationssignUpArgs,
+      TContext
+    >;
+  };
+
+  FormError?: {
+    fieldName?: LoaderResolver<
+      Maybe<Scalars["String"]>,
+      FormError,
+      {},
+      TContext
+    >;
+    message?: LoaderResolver<Maybe<Scalars["String"]>, FormError, {}, TContext>;
+  };
+
+  ErrorMessage?: {
+    message?: LoaderResolver<
+      Maybe<Scalars["String"]>,
+      ErrorMessage,
+      {},
+      TContext
+    >;
   };
 
   Board?: {
+    columns?: LoaderResolver<Array<BoardColumn>, Board, {}, TContext>;
     id?: LoaderResolver<Scalars["Int"], Board, {}, TContext>;
     title?: LoaderResolver<Scalars["String"], Board, {}, TContext>;
-    columns?: LoaderResolver<Array<BoardColumn>, Board, {}, TContext>;
+  };
+
+  BoardColumn?: {
+    id?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
+    title?: LoaderResolver<Scalars["String"], BoardColumn, {}, TContext>;
+    boardId?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
+    order?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
+  };
+
+  CreateColumnResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], CreateColumnResponse, {}, TContext>;
+    column?: LoaderResolver<
+      Maybe<BoardColumn>,
+      CreateColumnResponse,
+      {},
+      TContext
+    >;
+    error?: LoaderResolver<
+      Maybe<ErrorMessage>,
+      CreateColumnResponse,
+      {},
+      TContext
+    >;
+  };
+
+  UpdateColumnResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], UpdateColumnResponse, {}, TContext>;
+    column?: LoaderResolver<
+      Maybe<BoardColumn>,
+      UpdateColumnResponse,
+      {},
+      TContext
+    >;
+  };
+
+  DeleteColumnResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], DeleteColumnResponse, {}, TContext>;
+    columnId?: LoaderResolver<
+      Maybe<Scalars["Int"]>,
+      DeleteColumnResponse,
+      {},
+      TContext
+    >;
+  };
+
+  ColumnMutations?: {
+    createColumn?: LoaderResolver<
+      CreateColumnResponse,
+      ColumnMutations,
+      ColumnMutationscreateColumnArgs,
+      TContext
+    >;
+    updateColumn?: LoaderResolver<
+      UpdateColumnResponse,
+      ColumnMutations,
+      ColumnMutationsupdateColumnArgs,
+      TContext
+    >;
+    deleteColumn?: LoaderResolver<
+      DeleteColumnResponse,
+      ColumnMutations,
+      ColumnMutationsdeleteColumnArgs,
+      TContext
+    >;
+  };
+
+  User?: {
+    email?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
+    username?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
+    boards?: LoaderResolver<Array<BoardInfo>, User, {}, TContext>;
   };
 
   BoardInfo?: {
@@ -806,119 +931,6 @@ export interface Loaders<
       DeleteBoardResponse,
       BoardMutations,
       BoardMutationsdeleteBoardArgs,
-      TContext
-    >;
-  };
-
-  FormError?: {
-    fieldName?: LoaderResolver<
-      Maybe<Scalars["String"]>,
-      FormError,
-      {},
-      TContext
-    >;
-    message?: LoaderResolver<Maybe<Scalars["String"]>, FormError, {}, TContext>;
-  };
-
-  ErrorMessage?: {
-    message?: LoaderResolver<
-      Maybe<Scalars["String"]>,
-      ErrorMessage,
-      {},
-      TContext
-    >;
-  };
-
-  AuthLoginResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], AuthLoginResponse, {}, TContext>;
-    user?: LoaderResolver<Maybe<User>, AuthLoginResponse, {}, TContext>;
-    errors?: LoaderResolver<
-      Maybe<Array<Maybe<ErrorUnion>>>,
-      AuthLoginResponse,
-      {},
-      TContext
-    >;
-  };
-
-  AuthSignUpResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], AuthSignUpResponse, {}, TContext>;
-    errors?: LoaderResolver<
-      Maybe<Array<Maybe<ErrorUnion>>>,
-      AuthSignUpResponse,
-      {},
-      TContext
-    >;
-  };
-
-  AuthMutations?: {
-    login?: LoaderResolver<
-      AuthLoginResponse,
-      AuthMutations,
-      AuthMutationsloginArgs,
-      TContext
-    >;
-    signUp?: LoaderResolver<
-      AuthSignUpResponse,
-      AuthMutations,
-      AuthMutationssignUpArgs,
-      TContext
-    >;
-  };
-
-  BoardColumn?: {
-    id?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
-    title?: LoaderResolver<Scalars["String"], BoardColumn, {}, TContext>;
-    boardId?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
-    order?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
-  };
-
-  CreateColumnResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], CreateColumnResponse, {}, TContext>;
-    column?: LoaderResolver<
-      Maybe<BoardColumn>,
-      CreateColumnResponse,
-      {},
-      TContext
-    >;
-  };
-
-  UpdateColumnResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], UpdateColumnResponse, {}, TContext>;
-    column?: LoaderResolver<
-      Maybe<BoardColumn>,
-      UpdateColumnResponse,
-      {},
-      TContext
-    >;
-  };
-
-  DeleteColumnResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], DeleteColumnResponse, {}, TContext>;
-    columnId?: LoaderResolver<
-      Maybe<Scalars["Int"]>,
-      DeleteColumnResponse,
-      {},
-      TContext
-    >;
-  };
-
-  ColumnMutations?: {
-    createColumn?: LoaderResolver<
-      CreateColumnResponse,
-      ColumnMutations,
-      ColumnMutationscreateColumnArgs,
-      TContext
-    >;
-    updateColumn?: LoaderResolver<
-      UpdateColumnResponse,
-      ColumnMutations,
-      ColumnMutationsupdateColumnArgs,
-      TContext
-    >;
-    deleteColumn?: LoaderResolver<
-      DeleteColumnResponse,
-      ColumnMutations,
-      ColumnMutationsdeleteColumnArgs,
       TContext
     >;
   };

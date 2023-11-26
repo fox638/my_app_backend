@@ -15,7 +15,6 @@ export function boardModel(knex: Knex) {
       return boards;
     },
     createBoard(userId: number, input: CreateBoardInput) {
-      console.log("createBoard", userId, input);
       return knex("board")
         .insert({ user_id: userId, title: input.title })
         .returning(["id"])

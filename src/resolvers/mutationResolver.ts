@@ -4,6 +4,7 @@ const resolvers: IResolvers = {
   Mutation: {
     auth: () => ({}),
     board: () => ({}),
+    column: () => ({}),
   },
 };
 
