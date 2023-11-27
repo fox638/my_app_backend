@@ -3,6 +3,7 @@ import { FastifyInstance } from "fastify/types/instance";
 import { FastifyPluginCallback } from "fastify/types/plugin";
 import { IncomingMessage, Server, ServerResponse } from "http";
 import knex from "knex";
+import { Model, knexSnakeCaseMappers } from "objection";
 import { ServerConfig } from "../../config";
 
 const fastifyKnexJS: FastifyPluginCallback<ServerConfig> = async (
@@ -11,7 +12,9 @@ const fastifyKnexJS: FastifyPluginCallback<ServerConfig> = async (
   next: (err?: Error) => void
 ) => {
   try {
-    const handler = knex(options.knex);
+    const handler = knex({ ...options.knex, ...knexSnakeCaseMappers() });
+
+    Model.knex(handler);
 
     server.decorate("knex", handler).addHook("onClose", (instance, done) => {
       /* istanbul ignore else */

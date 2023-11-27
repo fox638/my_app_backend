@@ -3,7 +3,7 @@ import { CreateBoardInput, CreateBoardResponse } from "@/types/resolver-gql";
 import { MercuriusContext } from "mercurius";
 import { Board, Users as User } from "@/generate/db";
 import { UpdateBoardInput } from "@/generate/graphql";
-import { onlyNotNullValue } from "@/utils/onlyTrueValue";
+import { onlyNotNullValue } from "@/utils/onlyNotNullValue";
 
 export function boardService(context: MercuriusContext) {
   return {

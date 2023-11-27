@@ -1,11 +1,24 @@
-import { User } from "@/generate";
+import { User as UserType } from "@/generate";
+import Board from "@/model/Board";
+import User from "@/model/User";
 import { boardService } from "@/services/board.service";
 import { IResolvers } from "mercurius";
 
 export default {
   User: {
-    boards: (_, __, context) => {
-      return boardService(context).getUserBoardIds(context?.auth?.user as User);
+    boards: async (_, __, context) => {
+      const board = await Board.query()
+        .where("id", 6)
+        .withGraphFetched({
+          user: true,
+        })
+        .debug();
+
+      console.log("board result", board);
+
+      return boardService(context).getUserBoardIds(
+        context?.auth?.user as UserType
+      );
     },
   },
   BoardMutations: {
@@ -14,7 +27,7 @@ export default {
     deleteBoard: (_, args, context) => {
       return boardService(context).deleteBoard(
         args.input.boardId as number,
-        (context.auth?.user as User)?.id
+        (context.auth?.user as UserType)?.id
       );
     },
     updateBoard: (_, args, context) => {
