@@ -1,5 +1,6 @@
 import { Model } from "objection";
 import Board from "./Board";
+import BoardCard from "./BoardCard";
 
 export default class BoardColumn extends Model {
   id!: number;
@@ -18,6 +19,14 @@ export default class BoardColumn extends Model {
       join: {
         from: "board_column.boardId",
         to: "board.id",
+      },
+    },
+    cards: {
+      relation: Model.HasManyRelation,
+      modelClass: BoardCard,
+      join: {
+        from: "board_column.id",
+        to: "board_card.columnId",
       },
     },
   };
