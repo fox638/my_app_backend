@@ -1,15 +1,14 @@
-import { boardModel } from "@/model/boards";
 import { CreateBoardInput, CreateBoardResponse } from "@/types/resolver-gql";
 import { MercuriusContext } from "mercurius";
 import { Board, UpdateBoardInput } from "@/generate/graphql";
 import { onlyNotNullValue } from "@/utils/onlyNotNullValue";
-import User from "@/model/User";
+import UserModel from "@/model/User";
 import BoardModel from "@/model/Board";
 
 export function boardService(context: MercuriusContext) {
   return {
     getUserBoardIds: async (
-      user: User
+      user: UserModel
     ): Promise<
       {
         boardId: number;
@@ -17,17 +16,19 @@ export function boardService(context: MercuriusContext) {
       }[]
     > => {
       try {
-        return boardModel(context.app.knex)
-          .getUserBordsId(user.id)
-          .then((boardIds) =>
-            boardIds.map(({ id: boardId }) => ({
-              boardId,
+        return await user
+          .$relatedQuery<BoardModel>("boards")
+          .select("id")
+          .debug()
+          .then((resp) =>
+            resp.map((item) => ({
+              boardId: item.id,
               board: {},
             }))
           );
       } catch (error) {
         // TODO add logger
-        console.log("getUserBoardIds", error);
+        console.log("getUserBoardIds error", error);
         return [];
       }
     },
@@ -35,14 +36,17 @@ export function boardService(context: MercuriusContext) {
       input: CreateBoardInput
     ): Promise<CreateBoardResponse> => {
       try {
-        const boardId = await boardModel(context.app.knex).createBoard(
-          context.auth?.user?.id as number,
-          input
-        );
+        const board = await BoardModel.query()
+          .insert({
+            userId: context.auth?.user?.id,
+            ...input,
+          })
+          .select("id");
+
         return {
           ok: true,
           board: {
-            boardId,
+            boardId: board.id,
             board: {} as Board,
           },
         };
@@ -54,7 +58,7 @@ export function boardService(context: MercuriusContext) {
       }
     },
     getBoard: async (boardId: number) => {
-      return boardModel(context.app.knex).getBoardById(boardId);
+      return await BoardModel.query().findById(boardId);
     },
     deleteBoard: async (
       boardId: number,
@@ -65,7 +69,12 @@ export function boardService(context: MercuriusContext) {
       query: {};
     }> => {
       try {
-        await boardModel(context.app.knex).deleteBoardById(boardId, userId);
+        await BoardModel.query()
+          .delete()
+          .where("id", boardId)
+          .where("userId", userId)
+          .debug();
+
         return {
           ok: true,
           boardId,
@@ -81,14 +90,14 @@ export function boardService(context: MercuriusContext) {
     },
     updateBoard: async ({ boardId, ...input }: UpdateBoardInput) => {
       try {
-        const board = await boardModel(context.app.knex).updateBoard({
-          id: boardId,
-          ...onlyNotNullValue(input),
-        });
+        const updateBoard = await BoardModel.query().patchAndFetchById(
+          boardId,
+          onlyNotNullValue(input)
+        );
 
         return {
           ok: true,
-          board,
+          board: updateBoard,
         };
         //TODO handle error
       } catch {

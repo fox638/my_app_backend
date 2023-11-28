@@ -12,7 +12,7 @@ export default class User extends Model {
   updatedAt!: Date;
 
   static relationMappings = {
-    board: {
+    boards: {
       relation: Model.HasManyRelation,
       modelClass: Board,
       join: {
