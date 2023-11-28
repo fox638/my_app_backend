@@ -1,7 +1,7 @@
-import { Users } from "@/generate/db";
+import User from "@/model/User";
 
 declare module "mercurius-auth" {
   export interface MercuriusAuthContext {
-    user: Users;
+    user: User;
   }
 }

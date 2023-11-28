@@ -9,6 +9,7 @@ import {
   FormError,
 } from "../types/resolver-gql";
 import Joy from "joi";
+import User from "@/model/User";
 
 const schema = Joy.object<AuthSignUpInput, true>({
   email: Joy.string().email().required(),
@@ -41,13 +42,16 @@ export function authService(context: MercuriusContext) {
         };
       }
 
-      const userModel = usersModel(context.app.knex);
-      const user = await userModel.getUserByEmail(input.email);
-      const userByUsername = await userModel.getUserByUsername(input.username);
-      if (!user && !userByUsername) {
-        const password = await context.app.hash(input.password);
+      const user = await User.query()
+        .where(function () {
+          this.where("email", input.email).orWhere("username", input.username);
+        })
+        .first();
 
-        await userModel.createUser({ ...input, password });
+      if (!user) {
+        const password = await context.app.hash(input.password);
+        await User.query().insert({ ...input, password });
+
         return {
           ok: true,
         };
@@ -58,17 +62,6 @@ export function authService(context: MercuriusContext) {
             {
               __typename: "ErrorMessage",
               message: "Already registered",
-            },
-          ],
-        };
-      } else if (userByUsername) {
-        return {
-          ok: false,
-          errors: [
-            {
-              __typename: "FormError",
-              message: "Username already take",
-              fieldName: "username",
             },
           ],
         };
@@ -93,8 +86,7 @@ export function authService(context: MercuriusContext) {
         };
       }
 
-      const userModel = usersModel(context.app.knex);
-      const user = await userModel.getUserByEmail(input.email);
+      const user = await User.query().findOne({ email: input.email });
 
       if (user) {
         if (await context.app.hashCompare(input.password, user.password)) {

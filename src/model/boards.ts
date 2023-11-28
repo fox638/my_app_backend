@@ -1,6 +1,5 @@
-import { CreateBoardInput } from "@/types/resolver-gql";
+import { Board, CreateBoardInput } from "@/types/resolver-gql";
 import { Knex } from "knex";
-import { Board } from "@/generate/db";
 
 export function boardModel(knex: Knex) {
   return {

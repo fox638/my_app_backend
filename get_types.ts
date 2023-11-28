@@ -3,7 +3,7 @@ import knex from "knex";
 import config from "./knexfile";
 const { updateTypes } = require("knex-types");
 
-const db = knex(config.staging);
+const db = knex(config.development);
 
 updateTypes(db, { output: "./src/generate/db.ts" }).catch((err: any) => {
   console.error(err);

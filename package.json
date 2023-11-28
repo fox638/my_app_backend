@@ -9,7 +9,7 @@
     "dev": "nodemon",
     "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./ -o ./dist && cp -r src/typeDefs dist/src/typeDefs",
     "db:seed": "yarn knex seed:run --env staging",
-    "db:migrate": "yarn knex migrate:latest --env staging",
+    "db:migrate": "yarn knex migrate:latest --env development",
     "postdb:migrate": "yarn ts-node get_types.ts",
     "gen:gql": "graphql-codegen"
   },

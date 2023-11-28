@@ -10,6 +10,7 @@ import { usersModel } from "../../model/users";
 import { ServerConfig } from "../../config";
 import { codegenMercurius, CodegenMercuriusOptions } from "mercurius-codegen";
 import mercuriusValidation from "mercurius-validation";
+import User from "@/model/User";
 
 const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
   server,
@@ -53,7 +54,8 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
       const jwtDecode = context.app.jwt.decode(token) as any;
 
       if (jwtDecode?.email) {
-        const user = (await userModel.getUserByEmail(jwtDecode?.email)) || null;
+        const user =
+          (await User.query().findOne("email", jwtDecode?.email)) || null;
         return {
           user,
         };
