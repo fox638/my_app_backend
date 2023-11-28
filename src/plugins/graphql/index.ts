@@ -6,7 +6,6 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { loadFiles } from "@graphql-tools/load-files";
 import path from "node:path";
 import mercuriusAuth from "mercurius-auth";
-import { usersModel } from "../../model/users";
 import { ServerConfig } from "../../config";
 import { codegenMercurius, CodegenMercuriusOptions } from "mercurius-codegen";
 import mercuriusValidation from "mercurius-validation";
@@ -43,7 +42,6 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
 
   await server.register(mercuriusAuth, {
     async authContext(context) {
-      const userModel = usersModel(context.app.knex);
       const token = context.reply.request.cookies["user-jwt"] || "";
       if (!token) {
         return {

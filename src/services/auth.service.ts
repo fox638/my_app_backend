@@ -1,8 +1,6 @@
 import { MercuriusContext } from "mercurius";
-import { usersModel } from "../model/users";
 import {
   AuthLoginInput,
-  AuthLoginResponse,
   AuthSignUpInput,
   AuthSignUpResponse,
   ErrorMessage,

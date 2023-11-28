@@ -1,5 +1,5 @@
 import { IResolvers } from "mercurius";
-import { authService } from "../../services/authService";
+import { authService } from "../../services/auth.service";
 const authMutationsResolver: IResolvers = {
   AuthMutations: {
     login: (_, args, context, info) => {

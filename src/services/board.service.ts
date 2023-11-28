@@ -72,8 +72,7 @@ export function boardService(context: MercuriusContext) {
         await BoardModel.query()
           .delete()
           .where("id", boardId)
-          .where("userId", userId)
-          .debug();
+          .where("userId", userId);
 
         return {
           ok: true,

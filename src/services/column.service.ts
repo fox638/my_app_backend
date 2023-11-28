@@ -3,27 +3,22 @@ import {
   CreateColumnResponse,
   UpdateColumnInput,
 } from "@/generate/graphql";
-import { columnModel } from "@/model/column";
+import BoardColumnModel from "@/model/BoardColumn";
+
 import { onlyNotNullValue } from "@/utils/onlyNotNullValue";
 import { MercuriusContext } from "mercurius";
 
 export function columnService(context: MercuriusContext) {
   return {
-    createColumn: async ({
-      boardId: board_id,
-      ...input
-    }: CreateColumnInput): Promise<CreateColumnResponse> => {
+    createColumn: async (
+      input: CreateColumnInput
+    ): Promise<CreateColumnResponse> => {
       try {
-        const column = await columnModel(context.app.knex).createColumn({
-          board_id,
-          ...input,
-        });
+        const column = await BoardColumnModel.query().insert(input);
+
         return {
           ok: true,
-          column: {
-            ...column,
-            boardId: board_id,
-          },
+          column,
         };
       } catch (error) {
         return {
@@ -38,10 +33,10 @@ export function columnService(context: MercuriusContext) {
 
     updateColumn: async ({ columnId, ...input }: UpdateColumnInput) => {
       try {
-        const column = await columnModel(context.app.knex).updateColumn({
-          id: columnId,
-          ...onlyNotNullValue(input),
-        });
+        // const column = await columnModel(context.app.knex).updateColumn({
+        //   id: columnId,
+        //   ...onlyNotNullValue(input),
+        // });
       } catch (error) {}
     },
   };
