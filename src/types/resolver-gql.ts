@@ -56,7 +56,16 @@ export type AuthSignUpResponse = {
 
 export type Board = {
   __typename?: 'Board';
+  columns: Array<BoardColumn>;
   id: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type BoardColumn = {
+  __typename?: 'BoardColumn';
+  boardId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  order: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -69,7 +78,8 @@ export type BoardInfo = {
 export type BoardMutations = {
   __typename?: 'BoardMutations';
   createBoard: CreateBoardResponse;
-  deleteBoard?: Maybe<DeleteBoardResponse>;
+  deleteBoard: DeleteBoardResponse;
+  updateBoard: UpdateBoardResponse;
 };
 
 
@@ -82,6 +92,33 @@ export type BoardMutationsDeleteBoardArgs = {
   input: DeleteBoardInput;
 };
 
+
+export type BoardMutationsUpdateBoardArgs = {
+  input: UpdateBoardInput;
+};
+
+export type ColumnMutations = {
+  __typename?: 'ColumnMutations';
+  createColumn: CreateColumnResponse;
+  deleteColumn: DeleteColumnResponse;
+  updateColumn: UpdateColumnResponse;
+};
+
+
+export type ColumnMutationsCreateColumnArgs = {
+  input: CreateColumnInput;
+};
+
+
+export type ColumnMutationsDeleteColumnArgs = {
+  input: DeleteColumnInput;
+};
+
+
+export type ColumnMutationsUpdateColumnArgs = {
+  input: UpdateColumnInput;
+};
+
 export type CreateBoardInput = {
   title: Scalars['String']['input'];
 };
@@ -89,6 +126,19 @@ export type CreateBoardInput = {
 export type CreateBoardResponse = {
   __typename?: 'CreateBoardResponse';
   board?: Maybe<BoardInfo>;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type CreateColumnInput = {
+  boardId: Scalars['Int']['input'];
+  order: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+};
+
+export type CreateColumnResponse = {
+  __typename?: 'CreateColumnResponse';
+  column?: Maybe<BoardColumn>;
+  error?: Maybe<ErrorMessage>;
   ok: Scalars['Boolean']['output'];
 };
 
@@ -101,6 +151,16 @@ export type DeleteBoardResponse = {
   boardId?: Maybe<Scalars['Int']['output']>;
   ok: Scalars['Boolean']['output'];
   query?: Maybe<Query>;
+};
+
+export type DeleteColumnInput = {
+  columnId: Scalars['Int']['input'];
+};
+
+export type DeleteColumnResponse = {
+  __typename?: 'DeleteColumnResponse';
+  columnId?: Maybe<Scalars['Int']['output']>;
+  ok: Scalars['Boolean']['output'];
 };
 
 export type ErrorMessage = {
@@ -119,7 +179,8 @@ export type FormError = {
 export type Mutation = {
   __typename?: 'Mutation';
   auth: AuthMutations;
-  board?: Maybe<BoardMutations>;
+  board: BoardMutations;
+  column: ColumnMutations;
 };
 
 export type Query = {
@@ -127,9 +188,33 @@ export type Query = {
   me?: Maybe<User>;
 };
 
+export type UpdateBoardInput = {
+  boardId: Scalars['Int']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateBoardResponse = {
+  __typename?: 'UpdateBoardResponse';
+  board: Board;
+  ok: Scalars['Boolean']['output'];
+};
+
+export type UpdateColumnInput = {
+  columnId: Scalars['Int']['input'];
+  order?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateColumnResponse = {
+  __typename?: 'UpdateColumnResponse';
+  column?: Maybe<BoardColumn>;
+  error?: Maybe<ErrorMessage>;
+  ok: Scalars['Boolean']['output'];
+};
+
 export type User = {
   __typename?: 'User';
-  boards?: Maybe<Array<Maybe<BoardInfo>>>;
+  boards: Array<BoardInfo>;
   email?: Maybe<Scalars['String']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };

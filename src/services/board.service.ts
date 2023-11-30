@@ -58,6 +58,7 @@ export function boardService(context: MercuriusContext) {
       }
     },
     getBoard: async (boardId: number) => {
+      // TODO user check
       return await BoardModel.query().findById(boardId);
     },
     deleteBoard: async (
@@ -89,6 +90,7 @@ export function boardService(context: MercuriusContext) {
     },
     updateBoard: async ({ boardId, ...input }: UpdateBoardInput) => {
       try {
+        // TODO user check !!!
         const updateBoard = await BoardModel.query().patchAndFetchById(
           boardId,
           onlyNotNullValue(input)

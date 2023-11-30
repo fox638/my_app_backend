@@ -44,6 +44,7 @@ input DeleteColumnInput {
 type DeleteColumnResponse {
   ok: Boolean!
   columnId: Int
+  error: ErrorMessage
 }
 
 type ColumnMutations {

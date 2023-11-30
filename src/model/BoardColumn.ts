@@ -1,12 +1,14 @@
 import { Model } from "objection";
 import Board from "./Board";
 import BoardCard from "./BoardCard";
+import User from "./User";
 
 export default class BoardColumn extends Model {
   id!: number;
   title!: string;
   order!: number;
   boardId!: number;
+  userId!: number;
   createdAt!: Date;
   updatedAt!: Date;
 
@@ -27,6 +29,14 @@ export default class BoardColumn extends Model {
       join: {
         from: "board_column.id",
         to: "board_card.columnId",
+      },
+    },
+    user: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: User,
+      join: {
+        from: "board_column.userId",
+        to: "users.id",
       },
     },
   };
