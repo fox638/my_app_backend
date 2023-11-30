@@ -42,7 +42,8 @@ input UpdateBoardInput {
 
 type UpdateBoardResponse {
   ok: Boolean!
-  board: Board!
+  board: BoardInfo
+  error: ErrorMessage
 }
 
 type BoardMutations {

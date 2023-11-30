@@ -1,11 +1,20 @@
-import { CreateBoardInput, CreateBoardResponse } from "@/types/resolver-gql";
+import type {
+  CreateBoardInput,
+  CreateBoardResponse,
+} from "@/types/resolver-gql";
 import { MercuriusContext } from "mercurius";
-import { Board, UpdateBoardInput } from "@/generate/graphql";
+import {
+  Board,
+  UpdateBoardInput,
+  UpdateBoardResponse,
+} from "@/generate/graphql";
 import { onlyNotNullValue } from "@/utils/onlyNotNullValue";
 import UserModel from "@/model/User";
 import BoardModel from "@/model/Board";
 
 export function boardService(context: MercuriusContext) {
+  const userId = context.auth?.user?.id as number;
+
   return {
     getUserBoardIds: async (
       user: UserModel
@@ -19,7 +28,6 @@ export function boardService(context: MercuriusContext) {
         return await user
           .$relatedQuery<BoardModel>("boards")
           .select("id")
-          .debug()
           .then((resp) =>
             resp.map((item) => ({
               boardId: item.id,
@@ -27,8 +35,7 @@ export function boardService(context: MercuriusContext) {
             }))
           );
       } catch (error) {
-        // TODO add logger
-        console.log("getUserBoardIds error", error);
+        context.app.log.error("getUserBoardIds error", error);
         return [];
       }
     },
@@ -38,7 +45,7 @@ export function boardService(context: MercuriusContext) {
       try {
         const board = await BoardModel.query()
           .insert({
-            userId: context.auth?.user?.id,
+            userId,
             ...input,
           })
           .select("id");
@@ -58,8 +65,10 @@ export function boardService(context: MercuriusContext) {
       }
     },
     getBoard: async (boardId: number) => {
-      // TODO user check
-      return await BoardModel.query().findById(boardId);
+      return await BoardModel.query()
+        .where("id", boardId)
+        .where("userId", userId)
+        .first();
     },
     deleteBoard: async (
       boardId: number,
@@ -70,17 +79,26 @@ export function boardService(context: MercuriusContext) {
       query: {};
     }> => {
       try {
-        await BoardModel.query()
+        const count = await BoardModel.query()
           .delete()
           .where("id", boardId)
-          .where("userId", userId);
-
-        return {
-          ok: true,
-          boardId,
-          query: {},
-        };
-      } catch {
+          .where("userId", userId)
+          .debug();
+        if (count) {
+          return {
+            ok: true,
+            boardId,
+            query: {},
+          };
+        } else {
+          return {
+            ok: false,
+            boardId: null,
+            query: {},
+          };
+        }
+      } catch (error) {
+        context.app.log.error("deleteBoard error", error);
         return {
           ok: false,
           boardId: null,
@@ -88,23 +106,29 @@ export function boardService(context: MercuriusContext) {
         };
       }
     },
-    updateBoard: async ({ boardId, ...input }: UpdateBoardInput) => {
+    updateBoard: async ({
+      boardId,
+      ...input
+    }: UpdateBoardInput): Promise<UpdateBoardResponse> => {
       try {
-        // TODO user check !!!
-        const updateBoard = await BoardModel.query().patchAndFetchById(
-          boardId,
-          onlyNotNullValue(input)
-        );
+        const updateBoard = await BoardModel.query()
+          .where("id", boardId)
+          .where("userId", userId)
+          .patch(onlyNotNullValue(input))
+          .returning("id");
 
         return {
           ok: true,
-          board: updateBoard,
+          board: { boardId: updateBoard[0].id, board: {} as Board },
         };
-        //TODO handle error
-      } catch {
+      } catch (error) {
         return {
           ok: false,
           board: null,
+          error: {
+            __typename: "ErrorMessage",
+            message: (error as Error)?.message,
+          },
         };
       }
     },
