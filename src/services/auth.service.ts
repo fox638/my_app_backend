@@ -1,13 +1,14 @@
 import { MercuriusContext } from "mercurius";
-import {
-  AuthLoginInput,
-  AuthSignUpInput,
-  AuthSignUpResponse,
-  ErrorMessage,
-  FormError,
-} from "../types/resolver-gql";
+
 import Joy from "joi";
 import User from "@/model/User";
+import type {
+  AuthSignUpInput,
+  AuthLoginInput,
+  FormError,
+  AuthSignUpResponse,
+  ErrorMessage,
+} from "@/generate/graphql";
 
 const schema = Joy.object<AuthSignUpInput, true>({
   email: Joy.string().email().required(),

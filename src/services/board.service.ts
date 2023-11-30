@@ -1,10 +1,9 @@
+import { MercuriusContext } from "mercurius";
 import type {
+  Board,
   CreateBoardInput,
   CreateBoardResponse,
-} from "@/types/resolver-gql";
-import { MercuriusContext } from "mercurius";
-import {
-  Board,
+  DeleteBoardResponse,
   UpdateBoardInput,
   UpdateBoardResponse,
 } from "@/generate/graphql";
@@ -73,11 +72,7 @@ export function boardService(context: MercuriusContext) {
     deleteBoard: async (
       boardId: number,
       userId: number
-    ): Promise<{
-      ok: boolean;
-      boardId: number | null;
-      query: {};
-    }> => {
+    ): Promise<DeleteBoardResponse> => {
       try {
         const count = await BoardModel.query()
           .delete()

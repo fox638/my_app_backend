@@ -26,6 +26,7 @@ type DeleteColumnArguments = {
 
 export function columnService(context: MercuriusContext) {
   const user = context.auth?.user as UserModel;
+  const userId = user?.id;
   return {
     createColumn: async ({
       input: { boardId, ...input },
@@ -33,7 +34,7 @@ export function columnService(context: MercuriusContext) {
       try {
         const board = await BoardModel.query().findOne({
           id: boardId,
-          userId: user?.id,
+          userId,
         });
 
         if (board) {
