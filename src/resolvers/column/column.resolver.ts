@@ -20,4 +20,9 @@ export default {
       });
     },
   },
+  BoardColumnInfo: {
+    column: async ({ columnId }, _, context) => {
+      return columnService(context).getColumn(columnId);
+    },
+  },
 } as IResolvers;

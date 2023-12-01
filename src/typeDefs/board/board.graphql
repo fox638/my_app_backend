@@ -2,14 +2,14 @@ extend type User {
   boards: [BoardInfo!]!
 }
 
+type BoardInfo {
+  boardId: Int!
+  board: Board
+}
+
 type Board {
   id: Int!
   title: String!
-}
-
-type BoardInfo {
-  boardId: Int!
-  board: Board!
 }
 
 extend type Mutation {

@@ -1,4 +1,5 @@
 import {
+  BoardColumn,
   CreateColumnInput,
   CreateColumnResponse,
   DeleteColumnInput,
@@ -28,6 +29,19 @@ export function columnService(context: MercuriusContext) {
   const user = context.auth?.user as UserModel;
   const userId = user?.id;
   return {
+    getColumn: async (columnId: number): Promise<Nullable<BoardColumn>> => {
+      try {
+        return (
+          (await BoardColumnModel.query().findOne({
+            id: columnId,
+            userId,
+          })) || null
+        );
+      } catch (error) {
+        context.app.log.error("getColumn error", error);
+        return null;
+      }
+    },
     createColumn: async ({
       input: { boardId, ...input },
     }: CreateColumnArguments): Promise<CreateColumnResponse> => {
@@ -44,7 +58,10 @@ export function columnService(context: MercuriusContext) {
 
           return {
             ok: true,
-            column: boardColumn,
+            column: {
+              columnId: boardColumn.id,
+              column: boardColumn,
+            },
           };
         } else {
           return {
@@ -79,7 +96,10 @@ export function columnService(context: MercuriusContext) {
         if (column) {
           return {
             ok: true,
-            column: column[0],
+            column: {
+              columnId: column[0].id,
+              column: column[0],
+            },
             error: null,
           };
         } else {
