@@ -37,6 +37,18 @@ const config: { [key: string]: Knex.Config } = {
       directory: "./knex/seeds",
     },
   },
+  test: {
+    client: "sqlite3",
+    connection: {
+      filename: "./test.sqlite3",
+    },
+    migrations: {
+      directory: "./knex/migrations",
+    },
+    seeds: {
+      directory: "./knex/seeds",
+    },
+  },
 
   // production: {
   //   client: "postgresql",

@@ -5,17 +5,7 @@ import { Knex } from "knex";
 export const seed = async function (knex: Knex) {
   // Deletes ALL existing entries
   await knex("users").del();
-  await knex("users").insert(
-    //@ts-ignore
-    Array.from({ length: 5 }, (v, i) => {
-      return {
-        // id: i,
-        email: `user${i}@demo.test`,
-        username: faker.name.firstName(),
-        password: bcrypt.hashSync(`user${i}pass`, 10),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-    })
-  );
+  await knex("board").del();
+  await knex("board_column").del();
+  await knex("board_card").del();
 };

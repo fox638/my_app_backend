@@ -4,7 +4,7 @@ import type { FastifyRequest } from "fastify";
 import kenxconf from "../../knexfile";
 
 export type ServerConfig = Awaited<ReturnType<typeof getConfig>>;
-export async function getConfig() {
+export function getConfig() {
   const env = envSchema({
     dotenv: true,
     schema: S.object()

@@ -7,6 +7,6 @@
     "src/**/*.spec.ts",
     "src/generate/graphql.ts"
   ],
-  "exec": "ts-node --files src/index.ts",
+  "exec": "ts-node --files src/start.ts",
   "delay": 500
 }
