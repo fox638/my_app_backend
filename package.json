@@ -11,7 +11,7 @@
     "db:seed": "yarn knex seed:run --env staging",
     "db:migrate": "yarn knex migrate:latest --env development",
     "postdb:migrate": "yarn ts-node get_types.ts",
-    "test": "NODE_ENV=test cross-env && knex migrate:latest --env test && knex seed:run --env test && tap"
+    "test": "NODE_ENV=test knex migrate:latest --env test && knex seed:run --env test && tap"
   },
   "dependencies": {
     "@fastify/autoload": "^5.7.1",
@@ -21,6 +21,7 @@
     "@graphql-tools/load-files": "^7.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
     "env-schema": "^5.2.0",
     "fastify": "^4.23.2",
     "fastify-plugin": "^4.5.1",

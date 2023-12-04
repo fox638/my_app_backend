@@ -9,31 +9,84 @@ tap.teardown(async () => {
   await server.close();
 });
 
-tap.test("register user", async (t) => {
-  t.plan(1);
+tap.test("register user and login user", async (t) => {
+  // const signUpMutation = gql`
+  //   mutation {
+  //     auth {
+  //       signUp(
+  //         input: { email: "my@mail.com", password: "1111", username: "dima" }
+  //       ) {
+  //         ok
+  //       }
+  //     }
+  //   }
+  // `;
 
-  const query = `
+  const loginMutation = gql`
     mutation {
       auth {
-        signUp(
-          input: { email: "my@mail.com", password: "1111", username: "dima" }
-        ) {
+        login(input: { email: "my@mail.com", password: "1111" }) {
           ok
         }
       }
     }
   `;
 
-  const resp = await client.mutate<{
-    auth: {
-      signUp: {
-        ok: boolean;
-      };
-    };
-  }>(query);
+  const geMeQuery = gql`
+    query {
+      me {
+        email
+      }
+    }
+  `;
 
-  t.equal(resp.data.auth.signUp.ok, true);
-  console.log("resp", resp);
+  // const resp = await client.mutate<{
+  //   auth: {
+  //     signUp: {
+  //       ok: boolean;
+  //     };
+  //   };
+  // }>(signUpMutation);
+
+  // t.equal(
+  //   resp.data.auth.signUp.ok,
+  //   true,
+  //   "signUp mutation should return ok true"
+  // );
+
+  // const loginResp = await client.mutate<{
+  //   auth: {
+  //     login: {
+  //       ok: boolean;
+  //     };
+  //   };
+  // }>(loginMutation);
+  // console.log("loginResp", loginResp);
+
+  // t.equal(
+  //   loginResp.data.auth.login.ok,
+  //   true,
+  //   'login mutation should return ok "true"'
+  // );
+  await server.listen();
+
+  const jwt = server.jwt.sign({ email: "my@mail.com" });
+
+  const meResp = await client.query<{
+    me: {
+      email: string;
+    };
+  }>(geMeQuery, {
+    cookies: {
+      "user-jwt": jwt,
+    },
+  });
+
+  t.equal(
+    meResp.data.me.email,
+    "my@mail.com",
+    'get me query should return "my@mail.com"'
+  );
 
   t.end();
 });

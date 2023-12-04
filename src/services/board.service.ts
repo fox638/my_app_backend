@@ -49,7 +49,7 @@ export function boardService(context: MercuriusContext) {
             userId,
             ...input,
           })
-          .select("id");
+          .returning("id");
 
         return {
           ok: true,
@@ -93,8 +93,8 @@ export function boardService(context: MercuriusContext) {
         const count = await BoardModel.query()
           .delete()
           .where("id", boardId)
-          .where("userId", userId)
-          .debug();
+          .where("userId", userId);
+
         if (count) {
           return {
             ok: true,
