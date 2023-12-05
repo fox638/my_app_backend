@@ -54,7 +54,7 @@ export function columnService(context: MercuriusContext) {
         if (board) {
           const boardColumn = await board
             .$relatedQuery<BoardColumnModel>("columns")
-            .insert(input);
+            .insert({ ...input, userId });
 
           return {
             ok: true,

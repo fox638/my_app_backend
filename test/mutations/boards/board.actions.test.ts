@@ -211,4 +211,6 @@ tap.test("create, get, delete board", async (t) => {
   );
 
   t.equal(newBoard, undefined);
+
+  t.end();
 });
