@@ -63,6 +63,20 @@ const updateColumnMutation = gql`
   }
 `;
 
+const deleteColumnMutation = gql`
+  mutation deleteColumn($input: DeleteColumnInput!) {
+    column {
+      deleteColumn(input: $input) {
+        ok
+        columnId
+        error {
+          message
+        }
+      }
+    }
+  }
+`;
+
 const client = createMercuriusTestClient(server);
 
 tap.teardown(async () => {
@@ -200,6 +214,67 @@ tap.test("column test", async (t) => {
     t.equal(updatedColumn?.column.order, newTestColumnOrder);
     t.equal(updatedColumn?.column.id, newColumnId);
 
+    // delete column
+
+    const deleteColumnResp = await client.mutate<
+      {
+        column: {
+          deleteColumn: {
+            ok: boolean;
+            columnId: number;
+            error?: {
+              message: string;
+            };
+          };
+        };
+      },
+      {
+        input: {
+          columnId: number;
+        };
+      }
+    >(deleteColumnMutation, {
+      variables: {
+        input: {
+          columnId: newColumnId,
+        },
+      },
+      cookies: {
+        "user-jwt": jwt,
+      },
+    });
+
+    t.equal(deleteColumnResp.data.column.deleteColumn.ok, true);
+    t.equal(deleteColumnResp.data.column.deleteColumn.columnId, newColumnId);
+    t.equal(deleteColumnResp.data.column.deleteColumn.error, null);
+
+    const newUserColumnsResp = await client.query<{
+      me: {
+        boards: {
+          board: {
+            id: number;
+            title: string;
+            columns: {
+              columnId: number;
+              column: {
+                id: number;
+                title: string;
+                order: number;
+              };
+            }[];
+          };
+        }[];
+      };
+    }>(getUserColumnsQuery, {
+      cookies: {
+        "user-jwt": jwt,
+      },
+    });
+    const columnNew = newUserColumnsResp.data.me.boards
+      .find((board) => board.board.id === test_board?.id)
+      ?.board.columns.find((column) => column.columnId === newColumnId);
+    console.log("column", columnNew);
+    t.equal(!!columnNew, false);
     t.end();
   });
 

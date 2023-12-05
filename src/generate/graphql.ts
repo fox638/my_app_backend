@@ -40,9 +40,47 @@ export type Query = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  auth: AuthMutations;
   board: BoardMutations;
   column: ColumnMutations;
-  auth: AuthMutations;
+};
+
+export type AuthLoginInput = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+};
+
+export type AuthSignUpInput = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+  username: Scalars["String"];
+};
+
+export type AuthLoginResponse = {
+  __typename?: "AuthLoginResponse";
+  ok: Scalars["Boolean"];
+  user?: Maybe<User>;
+  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
+};
+
+export type AuthSignUpResponse = {
+  __typename?: "AuthSignUpResponse";
+  ok: Scalars["Boolean"];
+  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
+};
+
+export type AuthMutations = {
+  __typename?: "AuthMutations";
+  login: AuthLoginResponse;
+  signUp: AuthSignUpResponse;
+};
+
+export type AuthMutationsloginArgs = {
+  input: AuthLoginInput;
+};
+
+export type AuthMutationssignUpArgs = {
+  input: AuthSignUpInput;
 };
 
 export type User = {
@@ -200,44 +238,6 @@ export type ErrorMessage = {
 
 export type ErrorUnion = FormError | ErrorMessage;
 
-export type AuthLoginInput = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-};
-
-export type AuthSignUpInput = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-  username: Scalars["String"];
-};
-
-export type AuthLoginResponse = {
-  __typename?: "AuthLoginResponse";
-  ok: Scalars["Boolean"];
-  user?: Maybe<User>;
-  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
-};
-
-export type AuthSignUpResponse = {
-  __typename?: "AuthSignUpResponse";
-  ok: Scalars["Boolean"];
-  errors?: Maybe<Array<Maybe<ErrorUnion>>>;
-};
-
-export type AuthMutations = {
-  __typename?: "AuthMutations";
-  login: AuthLoginResponse;
-  signUp: AuthSignUpResponse;
-};
-
-export type AuthMutationsloginArgs = {
-  input: AuthLoginInput;
-};
-
-export type AuthMutationssignUpArgs = {
-  input: AuthSignUpInput;
-};
-
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
@@ -350,14 +350,27 @@ export type ResolversUnionParentTypes = {
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
-  User: ResolverTypeWrapper<User>;
+  AuthLoginInput: AuthLoginInput;
   String: ResolverTypeWrapper<Scalars["String"]>;
+  AuthSignUpInput: AuthSignUpInput;
+  AuthLoginResponse: ResolverTypeWrapper<
+    Omit<AuthLoginResponse, "errors"> & {
+      errors?: Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>;
+    }
+  >;
+  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
+  AuthSignUpResponse: ResolverTypeWrapper<
+    Omit<AuthSignUpResponse, "errors"> & {
+      errors?: Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>;
+    }
+  >;
+  AuthMutations: ResolverTypeWrapper<AuthMutations>;
+  User: ResolverTypeWrapper<User>;
   BoardInfo: ResolverTypeWrapper<BoardInfo>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   Board: ResolverTypeWrapper<Board>;
   CreateBoardInput: CreateBoardInput;
   CreateBoardResponse: ResolverTypeWrapper<CreateBoardResponse>;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   DeleteBoardInput: DeleteBoardInput;
   DeleteBoardResponse: ResolverTypeWrapper<DeleteBoardResponse>;
   UpdateBoardInput: UpdateBoardInput;
@@ -375,33 +388,29 @@ export type ResolversTypes = {
   FormError: ResolverTypeWrapper<FormError>;
   ErrorMessage: ResolverTypeWrapper<ErrorMessage>;
   ErrorUnion: ResolverTypeWrapper<ResolversUnionTypes["ErrorUnion"]>;
-  AuthLoginInput: AuthLoginInput;
-  AuthSignUpInput: AuthSignUpInput;
-  AuthLoginResponse: ResolverTypeWrapper<
-    Omit<AuthLoginResponse, "errors"> & {
-      errors?: Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>;
-    }
-  >;
-  AuthSignUpResponse: ResolverTypeWrapper<
-    Omit<AuthSignUpResponse, "errors"> & {
-      errors?: Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>;
-    }
-  >;
-  AuthMutations: ResolverTypeWrapper<AuthMutations>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
   Mutation: {};
-  User: User;
+  AuthLoginInput: AuthLoginInput;
   String: Scalars["String"];
+  AuthSignUpInput: AuthSignUpInput;
+  AuthLoginResponse: Omit<AuthLoginResponse, "errors"> & {
+    errors?: Maybe<Array<Maybe<ResolversParentTypes["ErrorUnion"]>>>;
+  };
+  Boolean: Scalars["Boolean"];
+  AuthSignUpResponse: Omit<AuthSignUpResponse, "errors"> & {
+    errors?: Maybe<Array<Maybe<ResolversParentTypes["ErrorUnion"]>>>;
+  };
+  AuthMutations: AuthMutations;
+  User: User;
   BoardInfo: BoardInfo;
   Int: Scalars["Int"];
   Board: Board;
   CreateBoardInput: CreateBoardInput;
   CreateBoardResponse: CreateBoardResponse;
-  Boolean: Scalars["Boolean"];
   DeleteBoardInput: DeleteBoardInput;
   DeleteBoardResponse: DeleteBoardResponse;
   UpdateBoardInput: UpdateBoardInput;
@@ -419,15 +428,6 @@ export type ResolversParentTypes = {
   FormError: FormError;
   ErrorMessage: ErrorMessage;
   ErrorUnion: ResolversUnionParentTypes["ErrorUnion"];
-  AuthLoginInput: AuthLoginInput;
-  AuthSignUpInput: AuthSignUpInput;
-  AuthLoginResponse: Omit<AuthLoginResponse, "errors"> & {
-    errors?: Maybe<Array<Maybe<ResolversParentTypes["ErrorUnion"]>>>;
-  };
-  AuthSignUpResponse: Omit<AuthSignUpResponse, "errors"> & {
-    errors?: Maybe<Array<Maybe<ResolversParentTypes["ErrorUnion"]>>>;
-  };
-  AuthMutations: AuthMutations;
 };
 
 export type authDirectiveArgs = {};
@@ -452,9 +452,58 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
 > = {
+  auth?: Resolver<ResolversTypes["AuthMutations"], ParentType, ContextType>;
   board?: Resolver<ResolversTypes["BoardMutations"], ParentType, ContextType>;
   column?: Resolver<ResolversTypes["ColumnMutations"], ParentType, ContextType>;
-  auth?: Resolver<ResolversTypes["AuthMutations"], ParentType, ContextType>;
+};
+
+export type AuthLoginResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["AuthLoginResponse"] = ResolversParentTypes["AuthLoginResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
+    ParentType,
+    ContextType
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AuthSignUpResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["AuthSignUpResponse"] = ResolversParentTypes["AuthSignUpResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  errors?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
+    ParentType,
+    ContextType
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AuthMutationsResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["AuthMutations"] = ResolversParentTypes["AuthMutations"],
+> = {
+  login?: Resolver<
+    ResolversTypes["AuthLoginResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<AuthMutationsloginArgs, "input">
+  >;
+  signUp?: Resolver<
+    ResolversTypes["AuthSignUpResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<AuthMutationssignUpArgs, "input">
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<
@@ -699,58 +748,12 @@ export type ErrorUnionResolvers<
   >;
 };
 
-export type AuthLoginResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["AuthLoginResponse"] = ResolversParentTypes["AuthLoginResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-  errors?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AuthSignUpResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["AuthSignUpResponse"] = ResolversParentTypes["AuthSignUpResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  errors?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes["ErrorUnion"]>>>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AuthMutationsResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["AuthMutations"] = ResolversParentTypes["AuthMutations"],
-> = {
-  login?: Resolver<
-    ResolversTypes["AuthLoginResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<AuthMutationsloginArgs, "input">
-  >;
-  signUp?: Resolver<
-    ResolversTypes["AuthSignUpResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<AuthMutationssignUpArgs, "input">
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = MercuriusContext> = {
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  AuthLoginResponse?: AuthLoginResponseResolvers<ContextType>;
+  AuthSignUpResponse?: AuthSignUpResponseResolvers<ContextType>;
+  AuthMutations?: AuthMutationsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   BoardInfo?: BoardInfoResolvers<ContextType>;
   Board?: BoardResolvers<ContextType>;
@@ -767,9 +770,6 @@ export type Resolvers<ContextType = MercuriusContext> = {
   FormError?: FormErrorResolvers<ContextType>;
   ErrorMessage?: ErrorMessageResolvers<ContextType>;
   ErrorUnion?: ErrorUnionResolvers<ContextType>;
-  AuthLoginResponse?: AuthLoginResponseResolvers<ContextType>;
-  AuthSignUpResponse?: AuthSignUpResponseResolvers<ContextType>;
-  AuthMutations?: AuthMutationsResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = MercuriusContext> = {
@@ -798,6 +798,42 @@ export interface Loaders<
     reply: import("fastify").FastifyReply;
   },
 > {
+  AuthLoginResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], AuthLoginResponse, {}, TContext>;
+    user?: LoaderResolver<Maybe<User>, AuthLoginResponse, {}, TContext>;
+    errors?: LoaderResolver<
+      Maybe<Array<Maybe<ErrorUnion>>>,
+      AuthLoginResponse,
+      {},
+      TContext
+    >;
+  };
+
+  AuthSignUpResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], AuthSignUpResponse, {}, TContext>;
+    errors?: LoaderResolver<
+      Maybe<Array<Maybe<ErrorUnion>>>,
+      AuthSignUpResponse,
+      {},
+      TContext
+    >;
+  };
+
+  AuthMutations?: {
+    login?: LoaderResolver<
+      AuthLoginResponse,
+      AuthMutations,
+      AuthMutationsloginArgs,
+      TContext
+    >;
+    signUp?: LoaderResolver<
+      AuthSignUpResponse,
+      AuthMutations,
+      AuthMutationssignUpArgs,
+      TContext
+    >;
+  };
+
   User?: {
     boards?: LoaderResolver<Array<BoardInfo>, User, {}, TContext>;
     email?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
@@ -959,42 +995,6 @@ export interface Loaders<
       Maybe<Scalars["String"]>,
       ErrorMessage,
       {},
-      TContext
-    >;
-  };
-
-  AuthLoginResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], AuthLoginResponse, {}, TContext>;
-    user?: LoaderResolver<Maybe<User>, AuthLoginResponse, {}, TContext>;
-    errors?: LoaderResolver<
-      Maybe<Array<Maybe<ErrorUnion>>>,
-      AuthLoginResponse,
-      {},
-      TContext
-    >;
-  };
-
-  AuthSignUpResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], AuthSignUpResponse, {}, TContext>;
-    errors?: LoaderResolver<
-      Maybe<Array<Maybe<ErrorUnion>>>,
-      AuthSignUpResponse,
-      {},
-      TContext
-    >;
-  };
-
-  AuthMutations?: {
-    login?: LoaderResolver<
-      AuthLoginResponse,
-      AuthMutations,
-      AuthMutationsloginArgs,
-      TContext
-    >;
-    signUp?: LoaderResolver<
-      AuthSignUpResponse,
-      AuthMutations,
-      AuthMutationssignUpArgs,
       TContext
     >;
   };
