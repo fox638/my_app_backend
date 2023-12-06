@@ -1,4 +1,5 @@
 import {
+  BoardCardInfo,
   BoardColumn,
   CreateColumnInput,
   CreateColumnResponse,
@@ -31,12 +32,12 @@ export function columnService(context: MercuriusContext) {
   return {
     getColumn: async (columnId: number): Promise<Nullable<BoardColumn>> => {
       try {
-        return (
-          (await BoardColumnModel.query().findOne({
-            id: columnId,
-            userId,
-          })) || null
-        );
+        const column = await BoardColumnModel.query().findOne({
+          id: columnId,
+          userId,
+        });
+
+        return column ? { ...column, cards: {} as BoardCardInfo[] } : null;
       } catch (error) {
         context.app.log.error("getColumn error", error);
         return null;
@@ -60,7 +61,7 @@ export function columnService(context: MercuriusContext) {
             ok: true,
             column: {
               columnId: boardColumn.id,
-              column: boardColumn,
+              column: { ...boardColumn, cards: {} as BoardCardInfo[] },
             },
           };
         } else {
@@ -98,7 +99,7 @@ export function columnService(context: MercuriusContext) {
             ok: true,
             column: {
               columnId: column[0].id,
-              column: column[0],
+              column: { ...column[0], cards: {} as BoardCardInfo[] },
             },
             error: null,
           };

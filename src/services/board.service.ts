@@ -1,6 +1,7 @@
 import { MercuriusContext } from "mercurius";
 import type {
   Board,
+  BoardColumn,
   BoardInfo,
   CreateBoardInput,
   CreateBoardResponse,
@@ -11,7 +12,7 @@ import type {
 import { onlyNotNullValue } from "@/utils/onlyNotNullValue";
 import UserModel from "@/model/User";
 import BoardModel from "@/model/Board";
-import BoardColumn from "@/model/BoardColumn";
+import BoardColumnModel from "@/model/BoardColumn";
 
 export function boardService(context: MercuriusContext) {
   const userId = context.auth?.user?.id as number;
@@ -75,10 +76,11 @@ export function boardService(context: MercuriusContext) {
         return null;
       }
       const columns = await board
-        .$relatedQuery<BoardColumn>("columns")
+        .$relatedQuery<BoardColumnModel>("columns")
         .returning("id");
       return {
         ...board,
+
         columns: columns.map((item) => ({
           columnId: item.id,
           column: {} as BoardColumn,

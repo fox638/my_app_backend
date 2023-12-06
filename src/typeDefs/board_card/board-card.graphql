@@ -1,0 +1,61 @@
+extend type BoardColumn {
+  cards: [BoardCardInfo!]!
+}
+
+type BoardCardInfo {
+  cardId: Int!
+  card: BoardCard!
+}
+
+type BoardCard {
+  id: Int!
+  title: String!
+  columnId: Int!
+  boardId: Int!
+  board: BoardInfo!
+  order: Int!
+}
+
+extend type Mutation {
+  card: CardMutations! @auth
+}
+
+input CreateCardInput {
+  title: String!
+  columnId: Int!
+  order: Int!
+}
+
+type CreateCardResponse {
+  ok: Boolean!
+  card: BoardCard
+  error: ErrorMessage
+}
+
+input UpdateCardInput {
+  cardId: Int!
+  title: String
+  order: Int
+}
+
+type UpdateCardResponse {
+  ok: Boolean!
+  card: BoardCard
+  error: ErrorMessage
+}
+
+input DeleteCardInput {
+  cardId: Int!
+}
+
+type DeleteCardResponse {
+  ok: Boolean!
+  cardId: Int
+  error: ErrorMessage
+}
+
+type CardMutations {
+  createCard(input: CreateCardInput!): CreateCardResponse
+  updateCard(input: UpdateCardInput!): UpdateCardResponse
+  deleteCard(input: DeleteCardInput!): DeleteCardResponse
+}

@@ -53,7 +53,7 @@ type DeleteColumnResponse {
 }
 
 type ColumnMutations {
-  createColumn(input: CreateColumnInput!): CreateColumnResponse!
-  updateColumn(input: UpdateColumnInput!): UpdateColumnResponse!
-  deleteColumn(input: DeleteColumnInput!): DeleteColumnResponse!
+  createColumn(input: CreateColumnInput!): CreateColumnResponse
+  updateColumn(input: UpdateColumnInput!): UpdateColumnResponse
+  deleteColumn(input: DeleteColumnInput!): DeleteColumnResponse
 }
