@@ -2,6 +2,10 @@ extend type Board {
   columns: [BoardColumnInfo!]!
 }
 
+extend type User {
+  columns: [BoardColumnInfo!]!
+}
+
 type BoardColumnInfo {
   columnId: Int!
   column: BoardColumn

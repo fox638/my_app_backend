@@ -2,6 +2,10 @@ extend type BoardColumn {
   cards: [BoardCardInfo!]!
 }
 
+extend type User {
+  cards: [BoardCardInfo!]!
+}
+
 type BoardCardInfo {
   cardId: Int!
   card: BoardCard!
