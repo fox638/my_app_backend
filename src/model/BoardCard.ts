@@ -1,7 +1,7 @@
 import { Model } from "objection";
 import BoardColumn from "./BoardColumn";
 
-export default class BoardCard extends Model {
+export default class BoardCardModel extends Model {
   id!: number;
   title!: string;
   description!: string;
@@ -10,6 +10,7 @@ export default class BoardCard extends Model {
   boardId!: number;
   createdAt!: Date;
   updatedAt!: Date;
+  userId!: number;
 
   static tableName = "board_card";
 

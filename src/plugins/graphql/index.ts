@@ -7,7 +7,6 @@ import { loadFiles } from "@graphql-tools/load-files";
 import path from "node:path";
 import mercuriusAuth from "mercurius-auth";
 import { ServerConfig } from "../../config";
-import { codegenMercurius, CodegenMercuriusOptions } from "mercurius-codegen";
 import mercuriusValidation from "mercurius-validation";
 import User from "@/model/User";
 
@@ -24,16 +23,6 @@ const graphqlMercurius: FastifyPluginAsync<ServerConfig> = async (
       path.join(__dirname, "../../resolvers/**/*.{js,ts}")
     ),
   });
-
-  const codegenMercuriusOptions: CodegenMercuriusOptions = {
-    targetPath: "./src/generate/graphql.ts",
-    // operationsGlob: "./src/graphql/operations/*.gql",
-    watchOptions: {
-      enabled: process.env.NODE_ENV === "development",
-    },
-  };
-
-  codegenMercurius(server, codegenMercuriusOptions).catch(console.error);
 
   await server.register(mercurius, {
     schema,

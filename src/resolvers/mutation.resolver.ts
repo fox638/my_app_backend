@@ -5,6 +5,7 @@ const resolvers: IResolvers = {
     auth: () => ({}),
     board: () => ({}),
     column: () => ({}),
+    card: () => ({}),
   },
 };
 

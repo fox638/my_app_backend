@@ -1,0 +1,48 @@
+mutation createBoardCard($input: CreateCardInput!) {
+  card {
+    createCard(input: $input) {
+      ok
+      # card {
+      #   id
+      #   # title
+      #   # columnId
+      #   # boardId
+      # }
+      error {
+        message
+      }
+    }
+  }
+}
+
+query getUserCards {
+  me {
+    cards {
+      cardId
+      card {
+        id
+        title
+      }
+    }
+    boards {
+      boardId
+      board {
+        id
+        columns {
+          columnId
+          column {
+            id
+            title
+            cards {
+              cardId
+              card {
+                id
+                title
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

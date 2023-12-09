@@ -25,9 +25,11 @@ extend type Mutation {
 }
 
 input CreateCardInput {
-  title: String!
-  columnId: Int!
   order: Int!
+  title: String!
+  description: String!
+  columnId: Int!
+  boardId: Int!
 }
 
 type CreateCardResponse {
