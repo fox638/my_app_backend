@@ -3,7 +3,7 @@ import Board from "./Board";
 import BoardColumn from "./BoardColumn";
 import BoardCard from "./BoardCard";
 
-export default class User extends Model {
+export default class UserModel extends Model {
   static tableName = "users";
 
   id!: number;

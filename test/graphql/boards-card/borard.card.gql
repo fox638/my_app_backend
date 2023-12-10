@@ -18,29 +18,17 @@ mutation createBoardCard($input: CreateCardInput!) {
 query getUserCards {
   me {
     cards {
-      cardId
-      card {
-        id
-        title
-      }
+      id
+      title
     }
     boards {
-      boardId
-      board {
+      id
+      columns {
         id
-        columns {
-          columnId
-          column {
-            id
-            title
-            cards {
-              cardId
-              card {
-                id
-                title
-              }
-            }
-          }
+        title
+        cards {
+          id
+          title
         }
       }
     }

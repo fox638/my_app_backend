@@ -87,24 +87,18 @@ export type AuthMutationssignUpArgs = {
 
 export type User = {
   __typename?: "User";
-  boards: Array<BoardInfo>;
-  columns: Array<BoardColumnInfo>;
-  cards: Array<BoardCardInfo>;
+  boards: Array<Maybe<Board>>;
+  columns: Array<BoardColumn>;
+  cards: Array<BoardCard>;
   email?: Maybe<Scalars["String"]>;
   username?: Maybe<Scalars["String"]>;
-};
-
-export type BoardInfo = {
-  __typename?: "BoardInfo";
-  boardId: Scalars["Int"];
-  board?: Maybe<Board>;
 };
 
 export type Board = {
   __typename?: "Board";
   id: Scalars["Int"];
   title: Scalars["String"];
-  columns: Array<BoardColumnInfo>;
+  columns: Array<BoardColumn>;
 };
 
 export type CreateBoardInput = {
@@ -114,7 +108,7 @@ export type CreateBoardInput = {
 export type CreateBoardResponse = {
   __typename?: "CreateBoardResponse";
   ok: Scalars["Boolean"];
-  board?: Maybe<BoardInfo>;
+  board?: Maybe<Board>;
 };
 
 export type DeleteBoardInput = {
@@ -136,7 +130,7 @@ export type UpdateBoardInput = {
 export type UpdateBoardResponse = {
   __typename?: "UpdateBoardResponse";
   ok: Scalars["Boolean"];
-  board?: Maybe<BoardInfo>;
+  board?: Maybe<Board>;
   error?: Maybe<ErrorMessage>;
 };
 
@@ -159,19 +153,13 @@ export type BoardMutationsdeleteBoardArgs = {
   input: DeleteBoardInput;
 };
 
-export type BoardColumnInfo = {
-  __typename?: "BoardColumnInfo";
-  columnId: Scalars["Int"];
-  column?: Maybe<BoardColumn>;
-};
-
 export type BoardColumn = {
   __typename?: "BoardColumn";
   id: Scalars["Int"];
   title: Scalars["String"];
   boardId: Scalars["Int"];
   order: Scalars["Int"];
-  cards: Array<BoardCardInfo>;
+  cards: Array<BoardCard>;
 };
 
 export type CreateColumnInput = {
@@ -183,7 +171,7 @@ export type CreateColumnInput = {
 export type CreateColumnResponse = {
   __typename?: "CreateColumnResponse";
   ok: Scalars["Boolean"];
-  column?: Maybe<BoardColumnInfo>;
+  column?: Maybe<BoardColumn>;
   error?: Maybe<ErrorMessage>;
 };
 
@@ -196,7 +184,7 @@ export type UpdateColumnInput = {
 export type UpdateColumnResponse = {
   __typename?: "UpdateColumnResponse";
   ok: Scalars["Boolean"];
-  column?: Maybe<BoardColumnInfo>;
+  column?: Maybe<BoardColumn>;
   error?: Maybe<ErrorMessage>;
 };
 
@@ -230,19 +218,13 @@ export type ColumnMutationsdeleteColumnArgs = {
   input: DeleteColumnInput;
 };
 
-export type BoardCardInfo = {
-  __typename?: "BoardCardInfo";
-  cardId: Scalars["Int"];
-  card: BoardCard;
-};
-
 export type BoardCard = {
   __typename?: "BoardCard";
   id: Scalars["Int"];
   title: Scalars["String"];
   columnId: Scalars["Int"];
   boardId: Scalars["Int"];
-  board: BoardInfo;
+  board: Board;
   order: Scalars["Int"];
 };
 
@@ -445,9 +427,8 @@ export type ResolversTypes = {
   >;
   AuthMutations: ResolverTypeWrapper<AuthMutations>;
   User: ResolverTypeWrapper<User>;
-  BoardInfo: ResolverTypeWrapper<BoardInfo>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Board: ResolverTypeWrapper<Board>;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   CreateBoardInput: CreateBoardInput;
   CreateBoardResponse: ResolverTypeWrapper<CreateBoardResponse>;
   DeleteBoardInput: DeleteBoardInput;
@@ -455,7 +436,6 @@ export type ResolversTypes = {
   UpdateBoardInput: UpdateBoardInput;
   UpdateBoardResponse: ResolverTypeWrapper<UpdateBoardResponse>;
   BoardMutations: ResolverTypeWrapper<BoardMutations>;
-  BoardColumnInfo: ResolverTypeWrapper<BoardColumnInfo>;
   BoardColumn: ResolverTypeWrapper<BoardColumn>;
   CreateColumnInput: CreateColumnInput;
   CreateColumnResponse: ResolverTypeWrapper<CreateColumnResponse>;
@@ -464,7 +444,6 @@ export type ResolversTypes = {
   DeleteColumnInput: DeleteColumnInput;
   DeleteColumnResponse: ResolverTypeWrapper<DeleteColumnResponse>;
   ColumnMutations: ResolverTypeWrapper<ColumnMutations>;
-  BoardCardInfo: ResolverTypeWrapper<BoardCardInfo>;
   BoardCard: ResolverTypeWrapper<BoardCard>;
   CreateCardInput: CreateCardInput;
   CreateCardResponse: ResolverTypeWrapper<CreateCardResponse>;
@@ -494,9 +473,8 @@ export type ResolversParentTypes = {
   };
   AuthMutations: AuthMutations;
   User: User;
-  BoardInfo: BoardInfo;
-  Int: Scalars["Int"];
   Board: Board;
+  Int: Scalars["Int"];
   CreateBoardInput: CreateBoardInput;
   CreateBoardResponse: CreateBoardResponse;
   DeleteBoardInput: DeleteBoardInput;
@@ -504,7 +482,6 @@ export type ResolversParentTypes = {
   UpdateBoardInput: UpdateBoardInput;
   UpdateBoardResponse: UpdateBoardResponse;
   BoardMutations: BoardMutations;
-  BoardColumnInfo: BoardColumnInfo;
   BoardColumn: BoardColumn;
   CreateColumnInput: CreateColumnInput;
   CreateColumnResponse: CreateColumnResponse;
@@ -513,7 +490,6 @@ export type ResolversParentTypes = {
   DeleteColumnInput: DeleteColumnInput;
   DeleteColumnResponse: DeleteColumnResponse;
   ColumnMutations: ColumnMutations;
-  BoardCardInfo: BoardCardInfo;
   BoardCard: BoardCard;
   CreateCardInput: CreateCardInput;
   CreateCardResponse: CreateCardResponse;
@@ -610,32 +586,18 @@ export type UserResolvers<
     ResolversParentTypes["User"] = ResolversParentTypes["User"],
 > = {
   boards?: Resolver<
-    Array<ResolversTypes["BoardInfo"]>,
+    Array<Maybe<ResolversTypes["Board"]>>,
     ParentType,
     ContextType
   >;
   columns?: Resolver<
-    Array<ResolversTypes["BoardColumnInfo"]>,
+    Array<ResolversTypes["BoardColumn"]>,
     ParentType,
     ContextType
   >;
-  cards?: Resolver<
-    Array<ResolversTypes["BoardCardInfo"]>,
-    ParentType,
-    ContextType
-  >;
+  cards?: Resolver<Array<ResolversTypes["BoardCard"]>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BoardInfoResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["BoardInfo"] = ResolversParentTypes["BoardInfo"],
-> = {
-  boardId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  board?: Resolver<Maybe<ResolversTypes["Board"]>, ParentType, ContextType>;
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -647,7 +609,7 @@ export type BoardResolvers<
   id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   columns?: Resolver<
-    Array<ResolversTypes["BoardColumnInfo"]>,
+    Array<ResolversTypes["BoardColumn"]>,
     ParentType,
     ContextType
   >;
@@ -660,7 +622,7 @@ export type CreateBoardResponseResolvers<
     ResolversParentTypes["CreateBoardResponse"] = ResolversParentTypes["CreateBoardResponse"],
 > = {
   ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  board?: Resolver<Maybe<ResolversTypes["BoardInfo"]>, ParentType, ContextType>;
+  board?: Resolver<Maybe<ResolversTypes["Board"]>, ParentType, ContextType>;
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -681,7 +643,7 @@ export type UpdateBoardResponseResolvers<
     ResolversParentTypes["UpdateBoardResponse"] = ResolversParentTypes["UpdateBoardResponse"],
 > = {
   ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  board?: Resolver<Maybe<ResolversTypes["BoardInfo"]>, ParentType, ContextType>;
+  board?: Resolver<Maybe<ResolversTypes["Board"]>, ParentType, ContextType>;
   error?: Resolver<
     Maybe<ResolversTypes["ErrorMessage"]>,
     ParentType,
@@ -716,20 +678,6 @@ export type BoardMutationsResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type BoardColumnInfoResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["BoardColumnInfo"] = ResolversParentTypes["BoardColumnInfo"],
-> = {
-  columnId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  column?: Resolver<
-    Maybe<ResolversTypes["BoardColumn"]>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type BoardColumnResolvers<
   ContextType = MercuriusContext,
   ParentType extends
@@ -739,11 +687,7 @@ export type BoardColumnResolvers<
   title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   boardId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   order?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  cards?: Resolver<
-    Array<ResolversTypes["BoardCardInfo"]>,
-    ParentType,
-    ContextType
-  >;
+  cards?: Resolver<Array<ResolversTypes["BoardCard"]>, ParentType, ContextType>;
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -754,7 +698,7 @@ export type CreateColumnResponseResolvers<
 > = {
   ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   column?: Resolver<
-    Maybe<ResolversTypes["BoardColumnInfo"]>,
+    Maybe<ResolversTypes["BoardColumn"]>,
     ParentType,
     ContextType
   >;
@@ -773,7 +717,7 @@ export type UpdateColumnResponseResolvers<
 > = {
   ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   column?: Resolver<
-    Maybe<ResolversTypes["BoardColumnInfo"]>,
+    Maybe<ResolversTypes["BoardColumn"]>,
     ParentType,
     ContextType
   >;
@@ -826,16 +770,6 @@ export type ColumnMutationsResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type BoardCardInfoResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["BoardCardInfo"] = ResolversParentTypes["BoardCardInfo"],
-> = {
-  cardId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  card?: Resolver<ResolversTypes["BoardCard"], ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type BoardCardResolvers<
   ContextType = MercuriusContext,
   ParentType extends
@@ -845,7 +779,7 @@ export type BoardCardResolvers<
   title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   columnId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   boardId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  board?: Resolver<ResolversTypes["BoardInfo"], ParentType, ContextType>;
+  board?: Resolver<ResolversTypes["Board"], ParentType, ContextType>;
   order?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -963,19 +897,16 @@ export type Resolvers<ContextType = MercuriusContext> = {
   AuthSignUpResponse?: AuthSignUpResponseResolvers<ContextType>;
   AuthMutations?: AuthMutationsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-  BoardInfo?: BoardInfoResolvers<ContextType>;
   Board?: BoardResolvers<ContextType>;
   CreateBoardResponse?: CreateBoardResponseResolvers<ContextType>;
   DeleteBoardResponse?: DeleteBoardResponseResolvers<ContextType>;
   UpdateBoardResponse?: UpdateBoardResponseResolvers<ContextType>;
   BoardMutations?: BoardMutationsResolvers<ContextType>;
-  BoardColumnInfo?: BoardColumnInfoResolvers<ContextType>;
   BoardColumn?: BoardColumnResolvers<ContextType>;
   CreateColumnResponse?: CreateColumnResponseResolvers<ContextType>;
   UpdateColumnResponse?: UpdateColumnResponseResolvers<ContextType>;
   DeleteColumnResponse?: DeleteColumnResponseResolvers<ContextType>;
   ColumnMutations?: ColumnMutationsResolvers<ContextType>;
-  BoardCardInfo?: BoardCardInfoResolvers<ContextType>;
   BoardCard?: BoardCardResolvers<ContextType>;
   CreateCardResponse?: CreateCardResponseResolvers<ContextType>;
   UpdateCardResponse?: UpdateCardResponseResolvers<ContextType>;
@@ -1049,27 +980,22 @@ export interface Loaders<
   };
 
   User?: {
-    boards?: LoaderResolver<Array<BoardInfo>, User, {}, TContext>;
-    columns?: LoaderResolver<Array<BoardColumnInfo>, User, {}, TContext>;
-    cards?: LoaderResolver<Array<BoardCardInfo>, User, {}, TContext>;
+    boards?: LoaderResolver<Array<Maybe<Board>>, User, {}, TContext>;
+    columns?: LoaderResolver<Array<BoardColumn>, User, {}, TContext>;
+    cards?: LoaderResolver<Array<BoardCard>, User, {}, TContext>;
     email?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
     username?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
-  };
-
-  BoardInfo?: {
-    boardId?: LoaderResolver<Scalars["Int"], BoardInfo, {}, TContext>;
-    board?: LoaderResolver<Maybe<Board>, BoardInfo, {}, TContext>;
   };
 
   Board?: {
     id?: LoaderResolver<Scalars["Int"], Board, {}, TContext>;
     title?: LoaderResolver<Scalars["String"], Board, {}, TContext>;
-    columns?: LoaderResolver<Array<BoardColumnInfo>, Board, {}, TContext>;
+    columns?: LoaderResolver<Array<BoardColumn>, Board, {}, TContext>;
   };
 
   CreateBoardResponse?: {
     ok?: LoaderResolver<Scalars["Boolean"], CreateBoardResponse, {}, TContext>;
-    board?: LoaderResolver<Maybe<BoardInfo>, CreateBoardResponse, {}, TContext>;
+    board?: LoaderResolver<Maybe<Board>, CreateBoardResponse, {}, TContext>;
   };
 
   DeleteBoardResponse?: {
@@ -1085,7 +1011,7 @@ export interface Loaders<
 
   UpdateBoardResponse?: {
     ok?: LoaderResolver<Scalars["Boolean"], UpdateBoardResponse, {}, TContext>;
-    board?: LoaderResolver<Maybe<BoardInfo>, UpdateBoardResponse, {}, TContext>;
+    board?: LoaderResolver<Maybe<Board>, UpdateBoardResponse, {}, TContext>;
     error?: LoaderResolver<
       Maybe<ErrorMessage>,
       UpdateBoardResponse,
@@ -1115,23 +1041,18 @@ export interface Loaders<
     >;
   };
 
-  BoardColumnInfo?: {
-    columnId?: LoaderResolver<Scalars["Int"], BoardColumnInfo, {}, TContext>;
-    column?: LoaderResolver<Maybe<BoardColumn>, BoardColumnInfo, {}, TContext>;
-  };
-
   BoardColumn?: {
     id?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
     title?: LoaderResolver<Scalars["String"], BoardColumn, {}, TContext>;
     boardId?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
     order?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
-    cards?: LoaderResolver<Array<BoardCardInfo>, BoardColumn, {}, TContext>;
+    cards?: LoaderResolver<Array<BoardCard>, BoardColumn, {}, TContext>;
   };
 
   CreateColumnResponse?: {
     ok?: LoaderResolver<Scalars["Boolean"], CreateColumnResponse, {}, TContext>;
     column?: LoaderResolver<
-      Maybe<BoardColumnInfo>,
+      Maybe<BoardColumn>,
       CreateColumnResponse,
       {},
       TContext
@@ -1147,7 +1068,7 @@ export interface Loaders<
   UpdateColumnResponse?: {
     ok?: LoaderResolver<Scalars["Boolean"], UpdateColumnResponse, {}, TContext>;
     column?: LoaderResolver<
-      Maybe<BoardColumnInfo>,
+      Maybe<BoardColumn>,
       UpdateColumnResponse,
       {},
       TContext
@@ -1197,17 +1118,12 @@ export interface Loaders<
     >;
   };
 
-  BoardCardInfo?: {
-    cardId?: LoaderResolver<Scalars["Int"], BoardCardInfo, {}, TContext>;
-    card?: LoaderResolver<BoardCard, BoardCardInfo, {}, TContext>;
-  };
-
   BoardCard?: {
     id?: LoaderResolver<Scalars["Int"], BoardCard, {}, TContext>;
     title?: LoaderResolver<Scalars["String"], BoardCard, {}, TContext>;
     columnId?: LoaderResolver<Scalars["Int"], BoardCard, {}, TContext>;
     boardId?: LoaderResolver<Scalars["Int"], BoardCard, {}, TContext>;
-    board?: LoaderResolver<BoardInfo, BoardCard, {}, TContext>;
+    board?: LoaderResolver<Board, BoardCard, {}, TContext>;
     order?: LoaderResolver<Scalars["Int"], BoardCard, {}, TContext>;
   };
 
@@ -1311,33 +1227,17 @@ export type getUserCardsQuery = {
   __typename?: "Query";
   me?: {
     __typename?: "User";
-    cards: Array<{
-      __typename?: "BoardCardInfo";
-      cardId: number;
-      card: { __typename?: "BoardCard"; id: number; title: string };
-    }>;
+    cards: Array<{ __typename?: "BoardCard"; id: number; title: string }>;
     boards: Array<{
-      __typename?: "BoardInfo";
-      boardId: number;
-      board?: {
-        __typename?: "Board";
+      __typename?: "Board";
+      id: number;
+      columns: Array<{
+        __typename?: "BoardColumn";
         id: number;
-        columns: Array<{
-          __typename?: "BoardColumnInfo";
-          columnId: number;
-          column?: {
-            __typename?: "BoardColumn";
-            id: number;
-            title: string;
-            cards: Array<{
-              __typename?: "BoardCardInfo";
-              cardId: number;
-              card: { __typename?: "BoardCard"; id: number; title: string };
-            }>;
-          } | null;
-        }>;
-      } | null;
-    }>;
+        title: string;
+        cards: Array<{ __typename?: "BoardCard"; id: number; title: string }>;
+      }>;
+    } | null>;
   } | null;
 };
 
@@ -1439,13 +1339,21 @@ export const getUserCardsDocument = {
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "title" } },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "boards" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
                       {
                         kind: "Field",
-                        name: { kind: "Name", value: "cardId" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "card" },
+                        name: { kind: "Name", value: "columns" },
                         selectionSet: {
                           kind: "SelectionSet",
                           selections: [
@@ -1457,106 +1365,19 @@ export const getUserCardsDocument = {
                               kind: "Field",
                               name: { kind: "Name", value: "title" },
                             },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "boards" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "boardId" },
-                      },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "board" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
                             {
                               kind: "Field",
-                              name: { kind: "Name", value: "id" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "columns" },
+                              name: { kind: "Name", value: "cards" },
                               selectionSet: {
                                 kind: "SelectionSet",
                                 selections: [
                                   {
                                     kind: "Field",
-                                    name: { kind: "Name", value: "columnId" },
+                                    name: { kind: "Name", value: "id" },
                                   },
                                   {
                                     kind: "Field",
-                                    name: { kind: "Name", value: "column" },
-                                    selectionSet: {
-                                      kind: "SelectionSet",
-                                      selections: [
-                                        {
-                                          kind: "Field",
-                                          name: { kind: "Name", value: "id" },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "title",
-                                          },
-                                        },
-                                        {
-                                          kind: "Field",
-                                          name: {
-                                            kind: "Name",
-                                            value: "cards",
-                                          },
-                                          selectionSet: {
-                                            kind: "SelectionSet",
-                                            selections: [
-                                              {
-                                                kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "cardId",
-                                                },
-                                              },
-                                              {
-                                                kind: "Field",
-                                                name: {
-                                                  kind: "Name",
-                                                  value: "card",
-                                                },
-                                                selectionSet: {
-                                                  kind: "SelectionSet",
-                                                  selections: [
-                                                    {
-                                                      kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "id",
-                                                      },
-                                                    },
-                                                    {
-                                                      kind: "Field",
-                                                      name: {
-                                                        kind: "Name",
-                                                        value: "title",
-                                                      },
-                                                    },
-                                                  ],
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
+                                    name: { kind: "Name", value: "title" },
                                   },
                                 ],
                               },

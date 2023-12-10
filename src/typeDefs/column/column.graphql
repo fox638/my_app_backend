@@ -1,14 +1,9 @@
 extend type Board {
-  columns: [BoardColumnInfo!]!
+  columns: [BoardColumn!]!
 }
 
 extend type User {
-  columns: [BoardColumnInfo!]!
-}
-
-type BoardColumnInfo {
-  columnId: Int!
-  column: BoardColumn
+  columns: [BoardColumn!]!
 }
 
 type BoardColumn {
@@ -30,7 +25,7 @@ input CreateColumnInput {
 
 type CreateColumnResponse {
   ok: Boolean!
-  column: BoardColumnInfo
+  column: BoardColumn
   error: ErrorMessage
 }
 
@@ -42,7 +37,7 @@ input UpdateColumnInput {
 
 type UpdateColumnResponse {
   ok: Boolean!
-  column: BoardColumnInfo
+  column: BoardColumn
   error: ErrorMessage
 }
 

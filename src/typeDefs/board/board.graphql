@@ -1,10 +1,5 @@
 extend type User {
-  boards: [BoardInfo!]!
-}
-
-type BoardInfo {
-  boardId: Int!
-  board: Board
+  boards: [Board]!
 }
 
 type Board {
@@ -22,7 +17,7 @@ input CreateBoardInput {
 
 type CreateBoardResponse {
   ok: Boolean!
-  board: BoardInfo
+  board: Board
 }
 
 input DeleteBoardInput {
@@ -42,7 +37,7 @@ input UpdateBoardInput {
 
 type UpdateBoardResponse {
   ok: Boolean!
-  board: BoardInfo
+  board: Board
   error: ErrorMessage
 }
 

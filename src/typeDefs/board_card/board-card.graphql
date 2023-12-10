@@ -1,14 +1,9 @@
 extend type BoardColumn {
-  cards: [BoardCardInfo!]!
+  cards: [BoardCard!]!
 }
 
 extend type User {
-  cards: [BoardCardInfo!]!
-}
-
-type BoardCardInfo {
-  cardId: Int!
-  card: BoardCard!
+  cards: [BoardCard!]!
 }
 
 type BoardCard {
@@ -16,7 +11,7 @@ type BoardCard {
   title: String!
   columnId: Int!
   boardId: Int!
-  board: BoardInfo!
+  board: Board!
   order: Int!
 }
 

@@ -9,13 +9,22 @@ import {
 
 const client = createMercuriusTestClient(server);
 
+tap.beforeEach(async () => {
+  await server.listen();
+  const jwt = server.jwt.sign({ email: "my@mail.com" });
+  const knex = server.knex;
+  tap.context = {
+    jwt,
+  };
+});
+
 tap.teardown(async () => {
   await server.close();
 });
 
 tap.test("create, get, delete board-card", async (t) => {
   await server.listen();
-  const jwt = server.jwt.sign({ email: "my@mail.com" });
+
   const testBoard = await server
     .knex("board")
     .where("title", "test_board")
