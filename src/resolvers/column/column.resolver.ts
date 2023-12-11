@@ -21,8 +21,10 @@ export default {
     },
   },
   Board: {
-    columns: async (_, args, context) => {
-      return [];
+    columns: async ({ id: boardId }, args, context) => {
+      return columnService(context).getColumnsByBoardId({
+        boardId,
+      });
     },
   },
 } as IResolvers;

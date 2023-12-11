@@ -26,6 +26,10 @@ type DeleteColumnArguments = {
   input: DeleteColumnInput;
 };
 
+type GetColumnsByBoardIdArgs = {
+  boardId: number;
+};
+
 export function columnService(context: MercuriusContext) {
   const user = context.auth?.user as UserModel;
   const userId = user?.id;
@@ -139,6 +143,16 @@ export function columnService(context: MercuriusContext) {
           },
         };
       }
+    },
+    getColumnsByBoardId: async ({
+      boardId,
+    }: GetColumnsByBoardIdArgs): Promise<Omit<BoardColumn, "cards">[]> => {
+      const columns = await BoardColumnModel.query()
+        .where("boardId", boardId)
+        .where("userId", userId)
+        .returning("*");
+
+      return columns ? columns : [];
     },
   };
 }
