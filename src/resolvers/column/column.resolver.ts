@@ -20,10 +20,18 @@ export default {
       });
     },
   },
+
   Board: {
     columns: async ({ id: boardId }, args, context) => {
       return columnService(context).getColumnsByBoardId({
         boardId,
+      });
+    },
+  },
+  User: {
+    columns: async ({ id: userId }, args, context) => {
+      return columnService(context).getColumnsByUserId({
+        userId,
       });
     },
   },

@@ -1,0 +1,64 @@
+mutation createColumn($input: CreateColumnInput!) {
+  column {
+    createColumn(input: $input) {
+      ok
+      column {
+        id
+        title
+        order
+      }
+      error {
+        message
+      }
+    }
+  }
+}
+
+query getUserBoardsColumns {
+  me {
+    boards {
+      id
+      title
+      columns {
+        id
+        title
+        order
+      }
+    }
+  }
+}
+
+query getUserColumns {
+  me {
+    columns {
+      id
+      title
+      order
+    }
+  }
+}
+
+mutation updateColumn($input: UpdateColumnInput!) {
+  column {
+    updateColumn(input: $input) {
+      ok
+      column {
+        id
+        title
+        order
+      }
+    }
+  }
+}
+
+mutation deleteColumn($input: DeleteColumnInput!) {
+  column {
+    deleteColumn(input: $input) {
+      ok
+      columnId
+      error {
+        message
+      }
+    }
+  }
+}

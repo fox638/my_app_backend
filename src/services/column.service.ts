@@ -30,6 +30,10 @@ type GetColumnsByBoardIdArgs = {
   boardId: number;
 };
 
+type GetColumnsByUserIdArgs = {
+  userId: number;
+};
+
 export function columnService(context: MercuriusContext) {
   const user = context.auth?.user as UserModel;
   const userId = user?.id;
@@ -149,6 +153,16 @@ export function columnService(context: MercuriusContext) {
     }: GetColumnsByBoardIdArgs): Promise<Omit<BoardColumn, "cards">[]> => {
       const columns = await BoardColumnModel.query()
         .where("boardId", boardId)
+        .where("userId", userId)
+        .returning("*");
+
+      return columns ? columns : [];
+    },
+
+    getColumnsByUserId: async ({
+      userId,
+    }: GetColumnsByUserIdArgs): Promise<Omit<BoardColumn, "cards">[]> => {
+      const columns = await BoardColumnModel.query()
         .where("userId", userId)
         .returning("*");
 
