@@ -10,7 +10,11 @@ const start = async () => {
 
   const code = await generateCode(
     schema,
-    {},
+    {
+      mappers: {
+        BoardColumn: "../model#BoardColumnModel",
+      },
+    },
     "",
     false,
     path.join(__dirname, "../../test/**/*.gql")

@@ -1,0 +1,45 @@
+mutation createBoard($input: CreateBoardInput!) {
+  board {
+    createBoard(input: $input) {
+      ok
+      board {
+        id
+        title
+      }
+    }
+  }
+}
+
+query getUserBoards {
+  me {
+    boards {
+      id
+      title
+      columns {
+        id
+        title
+      }
+    }
+  }
+}
+
+mutation deleteBoard($input: DeleteBoardInput!) {
+  board {
+    deleteBoard(input: $input) {
+      ok
+      boardId
+    }
+  }
+}
+
+mutation updateBoard($input: UpdateBoardInput!) {
+  board {
+    updateBoard(input: $input) {
+      ok
+      board {
+        id
+        title
+      }
+    }
+  }
+}

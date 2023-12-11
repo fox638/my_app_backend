@@ -20,9 +20,9 @@ export default {
       });
     },
   },
-  BoardColumnInfo: {
-    column: async ({ columnId }, _, context) => {
-      return columnService(context).getColumn(columnId);
+  Board: {
+    columns: async (_, args, context) => {
+      return [];
     },
   },
 } as IResolvers;

@@ -2,7 +2,6 @@ import { MercuriusContext } from "mercurius";
 import type {
   Board,
   BoardColumn,
-  BoardInfo,
   CreateBoardInput,
   CreateBoardResponse,
   DeleteBoardResponse,
@@ -18,24 +17,9 @@ export function boardService(context: MercuriusContext) {
   const userId = context.auth?.user?.id as number;
 
   return {
-    getUserBoardIds: async (
-      user: UserModel
-    ): Promise<
-      {
-        boardId: number;
-        board: {};
-      }[]
-    > => {
+    getUserBoardIds: async (user: UserModel) => {
       try {
-        return await user
-          .$relatedQuery<BoardModel>("boards")
-          .select("id")
-          .then((resp) =>
-            resp.map((item) => ({
-              boardId: item.id,
-              board: {},
-            }))
-          );
+        return await user.$relatedQuery<BoardModel>("boards").select("*");
       } catch (error) {
         context.app.log.error("getUserBoardIds error", error);
         return [];
@@ -54,10 +38,7 @@ export function boardService(context: MercuriusContext) {
 
         return {
           ok: true,
-          board: {
-            boardId: board.id,
-            board: {} as Board,
-          },
+          board: { ...board, columns: undefined as unknown as BoardColumn[] },
         };
       } catch (error) {
         return {
@@ -75,16 +56,10 @@ export function boardService(context: MercuriusContext) {
       if (!board) {
         return null;
       }
-      const columns = await board
-        .$relatedQuery<BoardColumnModel>("columns")
-        .returning("id");
+
       return {
         ...board,
-
-        columns: columns.map((item) => ({
-          columnId: item.id,
-          column: {} as BoardColumn,
-        })),
+        columns: undefined as unknown as BoardColumn[],
       };
     },
     deleteBoard: async (
@@ -128,11 +103,14 @@ export function boardService(context: MercuriusContext) {
           .where("id", boardId)
           .where("userId", userId)
           .patch(onlyNotNullValue(input))
-          .returning("id");
+          .returning("*");
 
         return {
           ok: true,
-          board: { boardId: updateBoard[0].id, board: {} as Board },
+          board: {
+            ...updateBoard[0],
+            columns: undefined as unknown as BoardColumn[],
+          },
         };
       } catch (error) {
         return {

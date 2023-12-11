@@ -22,9 +22,4 @@ export default {
       return boardService(context).updateBoard(args.input);
     },
   },
-  BoardInfo: {
-    board: ({ boardId }, _, context) =>
-      //TODO add loaders
-      boardService(context).getBoard(boardId),
-  },
 } as IResolvers;

@@ -1,5 +1,5 @@
 import {
-  BoardCardInfo,
+  BoardCard,
   BoardColumn,
   CreateColumnInput,
   CreateColumnResponse,
@@ -37,7 +37,7 @@ export function columnService(context: MercuriusContext) {
           userId,
         });
 
-        return column ? { ...column, cards: {} as BoardCardInfo[] } : null;
+        return column ? { ...column, cards: {} as BoardCard[] } : null;
       } catch (error) {
         context.app.log.error("getColumn error", error);
         return null;
@@ -59,10 +59,7 @@ export function columnService(context: MercuriusContext) {
 
           return {
             ok: true,
-            column: {
-              columnId: boardColumn.id,
-              column: { ...boardColumn, cards: {} as BoardCardInfo[] },
-            },
+            column: { ...boardColumn, cards: {} as BoardCard[] },
           };
         } else {
           return {
@@ -94,13 +91,10 @@ export function columnService(context: MercuriusContext) {
           .patch(onlyNotNullValue(input))
           .returning("*");
 
-        if (column) {
+        if (column[0]) {
           return {
             ok: true,
-            column: {
-              columnId: column[0].id,
-              column: { ...column[0], cards: {} as BoardCardInfo[] },
-            },
+            column: { ...column[0], cards: {} as BoardCard[] },
             error: null,
           };
         } else {
@@ -131,7 +125,7 @@ export function columnService(context: MercuriusContext) {
             this.where("userId", user?.id).andWhere("id", input.columnId);
           })
           .delete();
-        console.log("column", column);
+
         return {
           ok: true,
           columnId: input.columnId,
