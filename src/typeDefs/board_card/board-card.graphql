@@ -9,6 +9,7 @@ extend type User {
 type BoardCard {
   id: Int!
   title: String!
+  description: String!
   columnId: Int!
   boardId: Int!
   board: Board!
@@ -36,6 +37,7 @@ type CreateCardResponse {
 input UpdateCardInput {
   cardId: Int!
   title: String
+  description: String
   order: Int
 }
 

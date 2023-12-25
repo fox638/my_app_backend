@@ -51,8 +51,6 @@ tap.test("create, get, delete board", async (t) => {
     (board) => board?.id === createBoardId
   );
 
-  console.log("userBoards", userBoards);
-
   t.equal(board?.title, boardTitle);
 
   const updateBoardResp = await client.mutate(updateBoardDocument, {

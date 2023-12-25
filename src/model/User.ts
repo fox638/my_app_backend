@@ -1,7 +1,7 @@
 import { Model } from "objection";
-import Board from "./Board";
-import BoardColumn from "./BoardColumn";
-import BoardCard from "./BoardCard";
+import BoardModel from "./Board";
+import BoardColumnModel from "./BoardColumn";
+import BoardCardModel from "./BoardCard";
 
 export default class UserModel extends Model {
   static tableName = "users";
@@ -16,7 +16,7 @@ export default class UserModel extends Model {
   static relationMappings = {
     boards: {
       relation: Model.HasManyRelation,
-      modelClass: Board,
+      modelClass: BoardModel,
       join: {
         from: "users.id",
         to: "board.userId",
@@ -24,7 +24,7 @@ export default class UserModel extends Model {
     },
     columns: {
       relation: Model.HasManyRelation,
-      modelClass: BoardColumn,
+      modelClass: BoardColumnModel,
       join: {
         from: "users.id",
         to: "board_column.userId",
@@ -32,11 +32,29 @@ export default class UserModel extends Model {
     },
     cards: {
       relation: Model.HasManyRelation,
-      modelClass: BoardCard,
+      modelClass: BoardCardModel,
       join: {
         from: "users.id",
         to: "board_card.userId",
       },
     },
   };
+
+  async getOwnerdBoardById({ boardId }: { boardId: number }) {
+    return await this.$relatedQuery<BoardModel>("boards")
+      .findOne({ id: boardId })
+      .returning("*");
+  }
+
+  async getOwnerdColumnById({ columnId }: { columnId: number }) {
+    return await this.$relatedQuery<BoardColumnModel>("columns").findOne({
+      id: columnId,
+    });
+  }
+
+  async getOwnedBoardCardById({ cardId }: { cardId: number }) {
+    return await this.$relatedQuery<BoardCardModel>("cards")
+      .findOne({ id: cardId })
+      .returning("*");
+  }
 }

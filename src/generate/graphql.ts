@@ -43,9 +43,9 @@ export type Query = {
 export type Mutation = {
   __typename?: "Mutation";
   auth: AuthMutations;
+  board: BoardMutations;
   card: CardMutations;
   column: ColumnMutations;
-  board: BoardMutations;
 };
 
 export type AuthLoginInput = {
@@ -86,6 +86,75 @@ export type AuthMutationssignUpArgs = {
   input: AuthSignUpInput;
 };
 
+export type User = {
+  __typename?: "User";
+  boards: Array<Maybe<Board>>;
+  cards: Array<BoardCard>;
+  columns: Array<BoardColumn>;
+  id: Scalars["Int"];
+  email?: Maybe<Scalars["String"]>;
+  username?: Maybe<Scalars["String"]>;
+};
+
+export type Board = {
+  __typename?: "Board";
+  id: Scalars["Int"];
+  title: Scalars["String"];
+  columns: Array<BoardColumn>;
+};
+
+export type CreateBoardInput = {
+  title: Scalars["String"];
+};
+
+export type CreateBoardResponse = {
+  __typename?: "CreateBoardResponse";
+  ok: Scalars["Boolean"];
+  board?: Maybe<Board>;
+};
+
+export type DeleteBoardInput = {
+  boardId: Scalars["Int"];
+};
+
+export type DeleteBoardResponse = {
+  __typename?: "DeleteBoardResponse";
+  ok: Scalars["Boolean"];
+  boardId?: Maybe<Scalars["Int"]>;
+  query?: Maybe<Query>;
+};
+
+export type UpdateBoardInput = {
+  boardId: Scalars["Int"];
+  title?: InputMaybe<Scalars["String"]>;
+};
+
+export type UpdateBoardResponse = {
+  __typename?: "UpdateBoardResponse";
+  ok: Scalars["Boolean"];
+  board?: Maybe<Board>;
+  error?: Maybe<ErrorMessage>;
+};
+
+export type BoardMutations = {
+  __typename?: "BoardMutations";
+  createBoard: CreateBoardResponse;
+  updateBoard: UpdateBoardResponse;
+  deleteBoard: DeleteBoardResponse;
+};
+
+export type BoardMutationscreateBoardArgs = {
+  input: CreateBoardInput;
+};
+
+export type BoardMutationsupdateBoardArgs = {
+  input: UpdateBoardInput;
+};
+
+export type BoardMutationsdeleteBoardArgs = {
+  input: DeleteBoardInput;
+};
+
 export type BoardColumn = {
   __typename?: "BoardColumn";
   cards: Array<BoardCard>;
@@ -95,20 +164,11 @@ export type BoardColumn = {
   order: Scalars["Int"];
 };
 
-export type User = {
-  __typename?: "User";
-  cards: Array<BoardCard>;
-  columns: Array<BoardColumn>;
-  boards: Array<Maybe<Board>>;
-  id: Scalars["Int"];
-  email?: Maybe<Scalars["String"]>;
-  username?: Maybe<Scalars["String"]>;
-};
-
 export type BoardCard = {
   __typename?: "BoardCard";
   id: Scalars["Int"];
   title: Scalars["String"];
+  description: Scalars["String"];
   columnId: Scalars["Int"];
   boardId: Scalars["Int"];
   board: Board;
@@ -133,6 +193,7 @@ export type CreateCardResponse = {
 export type UpdateCardInput = {
   cardId: Scalars["Int"];
   title?: InputMaybe<Scalars["String"]>;
+  description?: InputMaybe<Scalars["String"]>;
   order?: InputMaybe<Scalars["Int"]>;
 };
 
@@ -171,13 +232,6 @@ export type CardMutationsupdateCardArgs = {
 
 export type CardMutationsdeleteCardArgs = {
   input: DeleteCardInput;
-};
-
-export type Board = {
-  __typename?: "Board";
-  columns: Array<BoardColumn>;
-  id: Scalars["Int"];
-  title: Scalars["String"];
 };
 
 export type CreateColumnInput = {
@@ -234,58 +288,6 @@ export type ColumnMutationsupdateColumnArgs = {
 
 export type ColumnMutationsdeleteColumnArgs = {
   input: DeleteColumnInput;
-};
-
-export type CreateBoardInput = {
-  title: Scalars["String"];
-};
-
-export type CreateBoardResponse = {
-  __typename?: "CreateBoardResponse";
-  ok: Scalars["Boolean"];
-  board?: Maybe<Board>;
-};
-
-export type DeleteBoardInput = {
-  boardId: Scalars["Int"];
-};
-
-export type DeleteBoardResponse = {
-  __typename?: "DeleteBoardResponse";
-  ok: Scalars["Boolean"];
-  boardId?: Maybe<Scalars["Int"]>;
-  query?: Maybe<Query>;
-};
-
-export type UpdateBoardInput = {
-  boardId: Scalars["Int"];
-  title?: InputMaybe<Scalars["String"]>;
-};
-
-export type UpdateBoardResponse = {
-  __typename?: "UpdateBoardResponse";
-  ok: Scalars["Boolean"];
-  board?: Maybe<Board>;
-  error?: Maybe<ErrorMessage>;
-};
-
-export type BoardMutations = {
-  __typename?: "BoardMutations";
-  createBoard: CreateBoardResponse;
-  updateBoard: UpdateBoardResponse;
-  deleteBoard: DeleteBoardResponse;
-};
-
-export type BoardMutationscreateBoardArgs = {
-  input: CreateBoardInput;
-};
-
-export type BoardMutationsupdateBoardArgs = {
-  input: UpdateBoardInput;
-};
-
-export type BoardMutationsdeleteBoardArgs = {
-  input: DeleteBoardInput;
 };
 
 export type FormError = {
@@ -433,60 +435,16 @@ export type ResolversTypes = {
       login: ResolversTypes["AuthLoginResponse"];
     }
   >;
-  BoardColumn: ResolverTypeWrapper<BoardColumnModel>;
-  Int: ResolverTypeWrapper<Scalars["Int"]>;
   User: ResolverTypeWrapper<
-    Omit<User, "cards" | "columns" | "boards"> & {
+    Omit<User, "boards" | "cards" | "columns"> & {
+      boards: Array<Maybe<ResolversTypes["Board"]>>;
       cards: Array<ResolversTypes["BoardCard"]>;
       columns: Array<ResolversTypes["BoardColumn"]>;
-      boards: Array<Maybe<ResolversTypes["Board"]>>;
     }
   >;
-  BoardCard: ResolverTypeWrapper<
-    Omit<BoardCard, "board"> & { board: ResolversTypes["Board"] }
-  >;
-  CreateCardInput: CreateCardInput;
-  CreateCardResponse: ResolverTypeWrapper<
-    Omit<CreateCardResponse, "card"> & {
-      card?: Maybe<ResolversTypes["BoardCard"]>;
-    }
-  >;
-  UpdateCardInput: UpdateCardInput;
-  UpdateCardResponse: ResolverTypeWrapper<
-    Omit<UpdateCardResponse, "card"> & {
-      card?: Maybe<ResolversTypes["BoardCard"]>;
-    }
-  >;
-  DeleteCardInput: DeleteCardInput;
-  DeleteCardResponse: ResolverTypeWrapper<DeleteCardResponse>;
-  CardMutations: ResolverTypeWrapper<
-    Omit<CardMutations, "createCard" | "updateCard"> & {
-      createCard?: Maybe<ResolversTypes["CreateCardResponse"]>;
-      updateCard?: Maybe<ResolversTypes["UpdateCardResponse"]>;
-    }
-  >;
+  Int: ResolverTypeWrapper<Scalars["Int"]>;
   Board: ResolverTypeWrapper<
     Omit<Board, "columns"> & { columns: Array<ResolversTypes["BoardColumn"]> }
-  >;
-  CreateColumnInput: CreateColumnInput;
-  CreateColumnResponse: ResolverTypeWrapper<
-    Omit<CreateColumnResponse, "column"> & {
-      column?: Maybe<ResolversTypes["BoardColumn"]>;
-    }
-  >;
-  UpdateColumnInput: UpdateColumnInput;
-  UpdateColumnResponse: ResolverTypeWrapper<
-    Omit<UpdateColumnResponse, "column"> & {
-      column?: Maybe<ResolversTypes["BoardColumn"]>;
-    }
-  >;
-  DeleteColumnInput: DeleteColumnInput;
-  DeleteColumnResponse: ResolverTypeWrapper<DeleteColumnResponse>;
-  ColumnMutations: ResolverTypeWrapper<
-    Omit<ColumnMutations, "createColumn" | "updateColumn"> & {
-      createColumn?: Maybe<ResolversTypes["CreateColumnResponse"]>;
-      updateColumn?: Maybe<ResolversTypes["UpdateColumnResponse"]>;
-    }
   >;
   CreateBoardInput: CreateBoardInput;
   CreateBoardResponse: ResolverTypeWrapper<
@@ -513,6 +471,50 @@ export type ResolversTypes = {
       deleteBoard: ResolversTypes["DeleteBoardResponse"];
     }
   >;
+  BoardColumn: ResolverTypeWrapper<BoardColumnModel>;
+  BoardCard: ResolverTypeWrapper<
+    Omit<BoardCard, "board"> & { board: ResolversTypes["Board"] }
+  >;
+  CreateCardInput: CreateCardInput;
+  CreateCardResponse: ResolverTypeWrapper<
+    Omit<CreateCardResponse, "card"> & {
+      card?: Maybe<ResolversTypes["BoardCard"]>;
+    }
+  >;
+  UpdateCardInput: UpdateCardInput;
+  UpdateCardResponse: ResolverTypeWrapper<
+    Omit<UpdateCardResponse, "card"> & {
+      card?: Maybe<ResolversTypes["BoardCard"]>;
+    }
+  >;
+  DeleteCardInput: DeleteCardInput;
+  DeleteCardResponse: ResolverTypeWrapper<DeleteCardResponse>;
+  CardMutations: ResolverTypeWrapper<
+    Omit<CardMutations, "createCard" | "updateCard"> & {
+      createCard?: Maybe<ResolversTypes["CreateCardResponse"]>;
+      updateCard?: Maybe<ResolversTypes["UpdateCardResponse"]>;
+    }
+  >;
+  CreateColumnInput: CreateColumnInput;
+  CreateColumnResponse: ResolverTypeWrapper<
+    Omit<CreateColumnResponse, "column"> & {
+      column?: Maybe<ResolversTypes["BoardColumn"]>;
+    }
+  >;
+  UpdateColumnInput: UpdateColumnInput;
+  UpdateColumnResponse: ResolverTypeWrapper<
+    Omit<UpdateColumnResponse, "column"> & {
+      column?: Maybe<ResolversTypes["BoardColumn"]>;
+    }
+  >;
+  DeleteColumnInput: DeleteColumnInput;
+  DeleteColumnResponse: ResolverTypeWrapper<DeleteColumnResponse>;
+  ColumnMutations: ResolverTypeWrapper<
+    Omit<ColumnMutations, "createColumn" | "updateColumn"> & {
+      createColumn?: Maybe<ResolversTypes["CreateColumnResponse"]>;
+      updateColumn?: Maybe<ResolversTypes["UpdateColumnResponse"]>;
+    }
+  >;
   FormError: ResolverTypeWrapper<FormError>;
   ErrorMessage: ResolverTypeWrapper<ErrorMessage>;
   ErrorUnion: ResolverTypeWrapper<ResolversUnionTypes["ErrorUnion"]>;
@@ -536,46 +538,14 @@ export type ResolversParentTypes = {
   AuthMutations: Omit<AuthMutations, "login"> & {
     login: ResolversParentTypes["AuthLoginResponse"];
   };
-  BoardColumn: BoardColumnModel;
-  Int: Scalars["Int"];
-  User: Omit<User, "cards" | "columns" | "boards"> & {
+  User: Omit<User, "boards" | "cards" | "columns"> & {
+    boards: Array<Maybe<ResolversParentTypes["Board"]>>;
     cards: Array<ResolversParentTypes["BoardCard"]>;
     columns: Array<ResolversParentTypes["BoardColumn"]>;
-    boards: Array<Maybe<ResolversParentTypes["Board"]>>;
   };
-  BoardCard: Omit<BoardCard, "board"> & {
-    board: ResolversParentTypes["Board"];
-  };
-  CreateCardInput: CreateCardInput;
-  CreateCardResponse: Omit<CreateCardResponse, "card"> & {
-    card?: Maybe<ResolversParentTypes["BoardCard"]>;
-  };
-  UpdateCardInput: UpdateCardInput;
-  UpdateCardResponse: Omit<UpdateCardResponse, "card"> & {
-    card?: Maybe<ResolversParentTypes["BoardCard"]>;
-  };
-  DeleteCardInput: DeleteCardInput;
-  DeleteCardResponse: DeleteCardResponse;
-  CardMutations: Omit<CardMutations, "createCard" | "updateCard"> & {
-    createCard?: Maybe<ResolversParentTypes["CreateCardResponse"]>;
-    updateCard?: Maybe<ResolversParentTypes["UpdateCardResponse"]>;
-  };
+  Int: Scalars["Int"];
   Board: Omit<Board, "columns"> & {
     columns: Array<ResolversParentTypes["BoardColumn"]>;
-  };
-  CreateColumnInput: CreateColumnInput;
-  CreateColumnResponse: Omit<CreateColumnResponse, "column"> & {
-    column?: Maybe<ResolversParentTypes["BoardColumn"]>;
-  };
-  UpdateColumnInput: UpdateColumnInput;
-  UpdateColumnResponse: Omit<UpdateColumnResponse, "column"> & {
-    column?: Maybe<ResolversParentTypes["BoardColumn"]>;
-  };
-  DeleteColumnInput: DeleteColumnInput;
-  DeleteColumnResponse: DeleteColumnResponse;
-  ColumnMutations: Omit<ColumnMutations, "createColumn" | "updateColumn"> & {
-    createColumn?: Maybe<ResolversParentTypes["CreateColumnResponse"]>;
-    updateColumn?: Maybe<ResolversParentTypes["UpdateColumnResponse"]>;
   };
   CreateBoardInput: CreateBoardInput;
   CreateBoardResponse: Omit<CreateBoardResponse, "board"> & {
@@ -596,6 +566,38 @@ export type ResolversParentTypes = {
     createBoard: ResolversParentTypes["CreateBoardResponse"];
     updateBoard: ResolversParentTypes["UpdateBoardResponse"];
     deleteBoard: ResolversParentTypes["DeleteBoardResponse"];
+  };
+  BoardColumn: BoardColumnModel;
+  BoardCard: Omit<BoardCard, "board"> & {
+    board: ResolversParentTypes["Board"];
+  };
+  CreateCardInput: CreateCardInput;
+  CreateCardResponse: Omit<CreateCardResponse, "card"> & {
+    card?: Maybe<ResolversParentTypes["BoardCard"]>;
+  };
+  UpdateCardInput: UpdateCardInput;
+  UpdateCardResponse: Omit<UpdateCardResponse, "card"> & {
+    card?: Maybe<ResolversParentTypes["BoardCard"]>;
+  };
+  DeleteCardInput: DeleteCardInput;
+  DeleteCardResponse: DeleteCardResponse;
+  CardMutations: Omit<CardMutations, "createCard" | "updateCard"> & {
+    createCard?: Maybe<ResolversParentTypes["CreateCardResponse"]>;
+    updateCard?: Maybe<ResolversParentTypes["UpdateCardResponse"]>;
+  };
+  CreateColumnInput: CreateColumnInput;
+  CreateColumnResponse: Omit<CreateColumnResponse, "column"> & {
+    column?: Maybe<ResolversParentTypes["BoardColumn"]>;
+  };
+  UpdateColumnInput: UpdateColumnInput;
+  UpdateColumnResponse: Omit<UpdateColumnResponse, "column"> & {
+    column?: Maybe<ResolversParentTypes["BoardColumn"]>;
+  };
+  DeleteColumnInput: DeleteColumnInput;
+  DeleteColumnResponse: DeleteColumnResponse;
+  ColumnMutations: Omit<ColumnMutations, "createColumn" | "updateColumn"> & {
+    createColumn?: Maybe<ResolversParentTypes["CreateColumnResponse"]>;
+    updateColumn?: Maybe<ResolversParentTypes["UpdateColumnResponse"]>;
   };
   FormError: FormError;
   ErrorMessage: ErrorMessage;
@@ -625,9 +627,9 @@ export type MutationResolvers<
     ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
 > = {
   auth?: Resolver<ResolversTypes["AuthMutations"], ParentType, ContextType>;
+  board?: Resolver<ResolversTypes["BoardMutations"], ParentType, ContextType>;
   card?: Resolver<ResolversTypes["CardMutations"], ParentType, ContextType>;
   column?: Resolver<ResolversTypes["ColumnMutations"], ParentType, ContextType>;
-  board?: Resolver<ResolversTypes["BoardMutations"], ParentType, ContextType>;
 };
 
 export type AuthLoginResponseResolvers<
@@ -679,6 +681,105 @@ export type AuthMutationsResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["User"] = ResolversParentTypes["User"],
+> = {
+  boards?: Resolver<
+    Array<Maybe<ResolversTypes["Board"]>>,
+    ParentType,
+    ContextType
+  >;
+  cards?: Resolver<Array<ResolversTypes["BoardCard"]>, ParentType, ContextType>;
+  columns?: Resolver<
+    Array<ResolversTypes["BoardColumn"]>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BoardResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["Board"] = ResolversParentTypes["Board"],
+> = {
+  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  columns?: Resolver<
+    Array<ResolversTypes["BoardColumn"]>,
+    ParentType,
+    ContextType
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateBoardResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["CreateBoardResponse"] = ResolversParentTypes["CreateBoardResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  board?: Resolver<Maybe<ResolversTypes["Board"]>, ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteBoardResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["DeleteBoardResponse"] = ResolversParentTypes["DeleteBoardResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  boardId?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes["Query"]>, ParentType, ContextType>;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateBoardResponseResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["UpdateBoardResponse"] = ResolversParentTypes["UpdateBoardResponse"],
+> = {
+  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  board?: Resolver<Maybe<ResolversTypes["Board"]>, ParentType, ContextType>;
+  error?: Resolver<
+    Maybe<ResolversTypes["ErrorMessage"]>,
+    ParentType,
+    ContextType
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BoardMutationsResolvers<
+  ContextType = MercuriusContext,
+  ParentType extends
+    ResolversParentTypes["BoardMutations"] = ResolversParentTypes["BoardMutations"],
+> = {
+  createBoard?: Resolver<
+    ResolversTypes["CreateBoardResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<BoardMutationscreateBoardArgs, "input">
+  >;
+  updateBoard?: Resolver<
+    ResolversTypes["UpdateBoardResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<BoardMutationsupdateBoardArgs, "input">
+  >;
+  deleteBoard?: Resolver<
+    ResolversTypes["DeleteBoardResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<BoardMutationsdeleteBoardArgs, "input">
+  >;
+  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type BoardColumnResolvers<
   ContextType = MercuriusContext,
   ParentType extends
@@ -692,28 +793,6 @@ export type BoardColumnResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["User"] = ResolversParentTypes["User"],
-> = {
-  cards?: Resolver<Array<ResolversTypes["BoardCard"]>, ParentType, ContextType>;
-  columns?: Resolver<
-    Array<ResolversTypes["BoardColumn"]>,
-    ParentType,
-    ContextType
-  >;
-  boards?: Resolver<
-    Array<Maybe<ResolversTypes["Board"]>>,
-    ParentType,
-    ContextType
-  >;
-  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type BoardCardResolvers<
   ContextType = MercuriusContext,
   ParentType extends
@@ -721,6 +800,7 @@ export type BoardCardResolvers<
 > = {
   id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   columnId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   boardId?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   board?: Resolver<ResolversTypes["Board"], ParentType, ContextType>;
@@ -796,21 +876,6 @@ export type CardMutationsResolvers<
     ContextType,
     RequireFields<CardMutationsdeleteCardArgs, "input">
   >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BoardResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["Board"] = ResolversParentTypes["Board"],
-> = {
-  columns?: Resolver<
-    Array<ResolversTypes["BoardColumn"]>,
-    ParentType,
-    ContextType
-  >;
-  id?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -893,68 +958,6 @@ export type ColumnMutationsResolvers<
   isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CreateBoardResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["CreateBoardResponse"] = ResolversParentTypes["CreateBoardResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  board?: Resolver<Maybe<ResolversTypes["Board"]>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeleteBoardResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["DeleteBoardResponse"] = ResolversParentTypes["DeleteBoardResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  boardId?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes["Query"]>, ParentType, ContextType>;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateBoardResponseResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["UpdateBoardResponse"] = ResolversParentTypes["UpdateBoardResponse"],
-> = {
-  ok?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  board?: Resolver<Maybe<ResolversTypes["Board"]>, ParentType, ContextType>;
-  error?: Resolver<
-    Maybe<ResolversTypes["ErrorMessage"]>,
-    ParentType,
-    ContextType
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BoardMutationsResolvers<
-  ContextType = MercuriusContext,
-  ParentType extends
-    ResolversParentTypes["BoardMutations"] = ResolversParentTypes["BoardMutations"],
-> = {
-  createBoard?: Resolver<
-    ResolversTypes["CreateBoardResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<BoardMutationscreateBoardArgs, "input">
-  >;
-  updateBoard?: Resolver<
-    ResolversTypes["UpdateBoardResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<BoardMutationsupdateBoardArgs, "input">
-  >;
-  deleteBoard?: Resolver<
-    ResolversTypes["DeleteBoardResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<BoardMutationsdeleteBoardArgs, "input">
-  >;
-  isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type FormErrorResolvers<
   ContextType = MercuriusContext,
   ParentType extends
@@ -996,22 +999,22 @@ export type Resolvers<ContextType = MercuriusContext> = {
   AuthLoginResponse?: AuthLoginResponseResolvers<ContextType>;
   AuthSignUpResponse?: AuthSignUpResponseResolvers<ContextType>;
   AuthMutations?: AuthMutationsResolvers<ContextType>;
-  BoardColumn?: BoardColumnResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  Board?: BoardResolvers<ContextType>;
+  CreateBoardResponse?: CreateBoardResponseResolvers<ContextType>;
+  DeleteBoardResponse?: DeleteBoardResponseResolvers<ContextType>;
+  UpdateBoardResponse?: UpdateBoardResponseResolvers<ContextType>;
+  BoardMutations?: BoardMutationsResolvers<ContextType>;
+  BoardColumn?: BoardColumnResolvers<ContextType>;
   BoardCard?: BoardCardResolvers<ContextType>;
   CreateCardResponse?: CreateCardResponseResolvers<ContextType>;
   UpdateCardResponse?: UpdateCardResponseResolvers<ContextType>;
   DeleteCardResponse?: DeleteCardResponseResolvers<ContextType>;
   CardMutations?: CardMutationsResolvers<ContextType>;
-  Board?: BoardResolvers<ContextType>;
   CreateColumnResponse?: CreateColumnResponseResolvers<ContextType>;
   UpdateColumnResponse?: UpdateColumnResponseResolvers<ContextType>;
   DeleteColumnResponse?: DeleteColumnResponseResolvers<ContextType>;
   ColumnMutations?: ColumnMutationsResolvers<ContextType>;
-  CreateBoardResponse?: CreateBoardResponseResolvers<ContextType>;
-  DeleteBoardResponse?: DeleteBoardResponseResolvers<ContextType>;
-  UpdateBoardResponse?: UpdateBoardResponseResolvers<ContextType>;
-  BoardMutations?: BoardMutationsResolvers<ContextType>;
   FormError?: FormErrorResolvers<ContextType>;
   ErrorMessage?: ErrorMessageResolvers<ContextType>;
   ErrorUnion?: ErrorUnionResolvers<ContextType>;
@@ -1079,6 +1082,69 @@ export interface Loaders<
     >;
   };
 
+  User?: {
+    boards?: LoaderResolver<Array<Maybe<Board>>, User, {}, TContext>;
+    cards?: LoaderResolver<Array<BoardCard>, User, {}, TContext>;
+    columns?: LoaderResolver<Array<BoardColumn>, User, {}, TContext>;
+    id?: LoaderResolver<Scalars["Int"], User, {}, TContext>;
+    email?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
+    username?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
+  };
+
+  Board?: {
+    id?: LoaderResolver<Scalars["Int"], Board, {}, TContext>;
+    title?: LoaderResolver<Scalars["String"], Board, {}, TContext>;
+    columns?: LoaderResolver<Array<BoardColumn>, Board, {}, TContext>;
+  };
+
+  CreateBoardResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], CreateBoardResponse, {}, TContext>;
+    board?: LoaderResolver<Maybe<Board>, CreateBoardResponse, {}, TContext>;
+  };
+
+  DeleteBoardResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], DeleteBoardResponse, {}, TContext>;
+    boardId?: LoaderResolver<
+      Maybe<Scalars["Int"]>,
+      DeleteBoardResponse,
+      {},
+      TContext
+    >;
+    query?: LoaderResolver<Maybe<Query>, DeleteBoardResponse, {}, TContext>;
+  };
+
+  UpdateBoardResponse?: {
+    ok?: LoaderResolver<Scalars["Boolean"], UpdateBoardResponse, {}, TContext>;
+    board?: LoaderResolver<Maybe<Board>, UpdateBoardResponse, {}, TContext>;
+    error?: LoaderResolver<
+      Maybe<ErrorMessage>,
+      UpdateBoardResponse,
+      {},
+      TContext
+    >;
+  };
+
+  BoardMutations?: {
+    createBoard?: LoaderResolver<
+      CreateBoardResponse,
+      BoardMutations,
+      BoardMutationscreateBoardArgs,
+      TContext
+    >;
+    updateBoard?: LoaderResolver<
+      UpdateBoardResponse,
+      BoardMutations,
+      BoardMutationsupdateBoardArgs,
+      TContext
+    >;
+    deleteBoard?: LoaderResolver<
+      DeleteBoardResponse,
+      BoardMutations,
+      BoardMutationsdeleteBoardArgs,
+      TContext
+    >;
+  };
+
   BoardColumn?: {
     cards?: LoaderResolver<Array<BoardCard>, BoardColumn, {}, TContext>;
     id?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
@@ -1087,18 +1153,10 @@ export interface Loaders<
     order?: LoaderResolver<Scalars["Int"], BoardColumn, {}, TContext>;
   };
 
-  User?: {
-    cards?: LoaderResolver<Array<BoardCard>, User, {}, TContext>;
-    columns?: LoaderResolver<Array<BoardColumn>, User, {}, TContext>;
-    boards?: LoaderResolver<Array<Maybe<Board>>, User, {}, TContext>;
-    id?: LoaderResolver<Scalars["Int"], User, {}, TContext>;
-    email?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
-    username?: LoaderResolver<Maybe<Scalars["String"]>, User, {}, TContext>;
-  };
-
   BoardCard?: {
     id?: LoaderResolver<Scalars["Int"], BoardCard, {}, TContext>;
     title?: LoaderResolver<Scalars["String"], BoardCard, {}, TContext>;
+    description?: LoaderResolver<Scalars["String"], BoardCard, {}, TContext>;
     columnId?: LoaderResolver<Scalars["Int"], BoardCard, {}, TContext>;
     boardId?: LoaderResolver<Scalars["Int"], BoardCard, {}, TContext>;
     board?: LoaderResolver<Board, BoardCard, {}, TContext>;
@@ -1162,12 +1220,6 @@ export interface Loaders<
       CardMutationsdeleteCardArgs,
       TContext
     >;
-  };
-
-  Board?: {
-    columns?: LoaderResolver<Array<BoardColumn>, Board, {}, TContext>;
-    id?: LoaderResolver<Scalars["Int"], Board, {}, TContext>;
-    title?: LoaderResolver<Scalars["String"], Board, {}, TContext>;
   };
 
   CreateColumnResponse?: {
@@ -1235,54 +1287,6 @@ export interface Loaders<
       Maybe<DeleteColumnResponse>,
       ColumnMutations,
       ColumnMutationsdeleteColumnArgs,
-      TContext
-    >;
-  };
-
-  CreateBoardResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], CreateBoardResponse, {}, TContext>;
-    board?: LoaderResolver<Maybe<Board>, CreateBoardResponse, {}, TContext>;
-  };
-
-  DeleteBoardResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], DeleteBoardResponse, {}, TContext>;
-    boardId?: LoaderResolver<
-      Maybe<Scalars["Int"]>,
-      DeleteBoardResponse,
-      {},
-      TContext
-    >;
-    query?: LoaderResolver<Maybe<Query>, DeleteBoardResponse, {}, TContext>;
-  };
-
-  UpdateBoardResponse?: {
-    ok?: LoaderResolver<Scalars["Boolean"], UpdateBoardResponse, {}, TContext>;
-    board?: LoaderResolver<Maybe<Board>, UpdateBoardResponse, {}, TContext>;
-    error?: LoaderResolver<
-      Maybe<ErrorMessage>,
-      UpdateBoardResponse,
-      {},
-      TContext
-    >;
-  };
-
-  BoardMutations?: {
-    createBoard?: LoaderResolver<
-      CreateBoardResponse,
-      BoardMutations,
-      BoardMutationscreateBoardArgs,
-      TContext
-    >;
-    updateBoard?: LoaderResolver<
-      UpdateBoardResponse,
-      BoardMutations,
-      BoardMutationsupdateBoardArgs,
-      TContext
-    >;
-    deleteBoard?: LoaderResolver<
-      DeleteBoardResponse,
-      BoardMutations,
-      BoardMutationsdeleteBoardArgs,
       TContext
     >;
   };
@@ -1367,42 +1371,6 @@ export type updateBoardMutation = {
       board?: { __typename?: "Board"; id: number; title: string } | null;
     };
   };
-};
-
-export type createBoardCardMutationVariables = Exact<{
-  input: CreateCardInput;
-}>;
-
-export type createBoardCardMutation = {
-  __typename?: "Mutation";
-  card: {
-    __typename?: "CardMutations";
-    createCard?: {
-      __typename?: "CreateCardResponse";
-      ok: boolean;
-      error?: { __typename?: "ErrorMessage"; message?: string | null } | null;
-    } | null;
-  };
-};
-
-export type getUserCardsQueryVariables = Exact<{ [key: string]: never }>;
-
-export type getUserCardsQuery = {
-  __typename?: "Query";
-  me?: {
-    __typename?: "User";
-    cards: Array<{ __typename?: "BoardCard"; id: number; title: string }>;
-    boards: Array<{
-      __typename?: "Board";
-      id: number;
-      columns: Array<{
-        __typename?: "BoardColumn";
-        id: number;
-        title: string;
-        cards: Array<{ __typename?: "BoardCard"; id: number; title: string }>;
-      }>;
-    } | null>;
-  } | null;
 };
 
 export type createColumnMutationVariables = Exact<{
@@ -1500,6 +1468,102 @@ export type deleteColumnMutation = {
       error?: { __typename?: "ErrorMessage"; message?: string | null } | null;
     } | null;
   };
+};
+
+export type createBoardCardMutationVariables = Exact<{
+  input: CreateCardInput;
+}>;
+
+export type createBoardCardMutation = {
+  __typename?: "Mutation";
+  card: {
+    __typename?: "CardMutations";
+    createCard?: {
+      __typename?: "CreateCardResponse";
+      ok: boolean;
+      card?: {
+        __typename?: "BoardCard";
+        id: number;
+        title: string;
+        description: string;
+        columnId: number;
+        boardId: number;
+      } | null;
+      error?: { __typename?: "ErrorMessage"; message?: string | null } | null;
+    } | null;
+  };
+};
+
+export type updateBoardCardMutationVariables = Exact<{
+  input: UpdateCardInput;
+}>;
+
+export type updateBoardCardMutation = {
+  __typename?: "Mutation";
+  card: {
+    __typename?: "CardMutations";
+    updateCard?: {
+      __typename?: "UpdateCardResponse";
+      ok: boolean;
+      card?: {
+        __typename?: "BoardCard";
+        id: number;
+        title: string;
+        order: number;
+        description: string;
+        columnId: number;
+        boardId: number;
+      } | null;
+      error?: { __typename?: "ErrorMessage"; message?: string | null } | null;
+    } | null;
+  };
+};
+
+export type deleteBoardCardMutationVariables = Exact<{
+  input: DeleteCardInput;
+}>;
+
+export type deleteBoardCardMutation = {
+  __typename?: "Mutation";
+  card: {
+    __typename?: "CardMutations";
+    deleteCard?: {
+      __typename?: "DeleteCardResponse";
+      ok: boolean;
+      cardId?: number | null;
+      error?: { __typename?: "ErrorMessage"; message?: string | null } | null;
+    } | null;
+  };
+};
+
+export type getUserCardsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type getUserCardsQuery = {
+  __typename?: "Query";
+  me?: {
+    __typename?: "User";
+    cards: Array<{
+      __typename?: "BoardCard";
+      id: number;
+      title: string;
+      description: string;
+    }>;
+    boards: Array<{
+      __typename?: "Board";
+      id: number;
+      columns: Array<{
+        __typename?: "BoardColumn";
+        id: number;
+        title: string;
+        cards: Array<{
+          __typename?: "BoardCard";
+          id: number;
+          title: string;
+          description: string;
+        }>;
+      }>;
+    } | null>;
+  } | null;
 };
 
 export const createBoardDocument = {
@@ -1772,161 +1836,6 @@ export const updateBoardDocument = {
     },
   ],
 } as unknown as DocumentNode<updateBoardMutation, updateBoardMutationVariables>;
-export const createBoardCardDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "mutation",
-      name: { kind: "Name", value: "createBoardCard" },
-      variableDefinitions: [
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "input" },
-          },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "CreateCardInput" },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "card" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "createCard" },
-                  arguments: [
-                    {
-                      kind: "Argument",
-                      name: { kind: "Name", value: "input" },
-                      value: {
-                        kind: "Variable",
-                        name: { kind: "Name", value: "input" },
-                      },
-                    },
-                  ],
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "ok" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "error" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "message" },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  createBoardCardMutation,
-  createBoardCardMutationVariables
->;
-export const getUserCardsDocument = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "OperationDefinition",
-      operation: "query",
-      name: { kind: "Name", value: "getUserCards" },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          {
-            kind: "Field",
-            name: { kind: "Name", value: "me" },
-            selectionSet: {
-              kind: "SelectionSet",
-              selections: [
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "cards" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      { kind: "Field", name: { kind: "Name", value: "title" } },
-                    ],
-                  },
-                },
-                {
-                  kind: "Field",
-                  name: { kind: "Name", value: "boards" },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      { kind: "Field", name: { kind: "Name", value: "id" } },
-                      {
-                        kind: "Field",
-                        name: { kind: "Name", value: "columns" },
-                        selectionSet: {
-                          kind: "SelectionSet",
-                          selections: [
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "id" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "title" },
-                            },
-                            {
-                              kind: "Field",
-                              name: { kind: "Name", value: "cards" },
-                              selectionSet: {
-                                kind: "SelectionSet",
-                                selections: [
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "id" },
-                                  },
-                                  {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "title" },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<getUserCardsQuery, getUserCardsQueryVariables>;
 export const createColumnDocument = {
   kind: "Document",
   definitions: [
@@ -2283,6 +2192,390 @@ export const deleteColumnDocument = {
   deleteColumnMutation,
   deleteColumnMutationVariables
 >;
+export const createBoardCardDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "createBoardCard" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateCardInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "card" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "createCard" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "input" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "input" },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "ok" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "card" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "columnId" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "boardId" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "error" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "message" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  createBoardCardMutation,
+  createBoardCardMutationVariables
+>;
+export const updateBoardCardDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "updateBoardCard" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "UpdateCardInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "card" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "updateCard" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "input" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "input" },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "ok" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "card" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "order" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "description" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "columnId" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "boardId" },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "error" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "message" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  updateBoardCardMutation,
+  updateBoardCardMutationVariables
+>;
+export const deleteBoardCardDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "deleteBoardCard" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "input" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DeleteCardInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "card" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "deleteCard" },
+                  arguments: [
+                    {
+                      kind: "Argument",
+                      name: { kind: "Name", value: "input" },
+                      value: {
+                        kind: "Variable",
+                        name: { kind: "Name", value: "input" },
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "ok" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "cardId" },
+                      },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "error" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "message" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  deleteBoardCardMutation,
+  deleteBoardCardMutationVariables
+>;
+export const getUserCardsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "getUserCards" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "me" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "cards" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      { kind: "Field", name: { kind: "Name", value: "title" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "description" },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "boards" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "columns" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "cards" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "id" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "title" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "description",
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<getUserCardsQuery, getUserCardsQueryVariables>;
 declare module "mercurius" {
   interface IResolvers
     extends Resolvers<import("mercurius").MercuriusContext> {}

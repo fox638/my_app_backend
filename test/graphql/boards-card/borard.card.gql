@@ -2,12 +2,44 @@ mutation createBoardCard($input: CreateCardInput!) {
   card {
     createCard(input: $input) {
       ok
-      # card {
-      #   id
-      #   # title
-      #   # columnId
-      #   # boardId
-      # }
+      card {
+        id
+        title
+        description
+        columnId
+        boardId
+      }
+      error {
+        message
+      }
+    }
+  }
+}
+
+mutation updateBoardCard($input: UpdateCardInput!) {
+  card {
+    updateCard(input: $input) {
+      ok
+      card {
+        id
+        title
+        order
+        description
+        columnId
+        boardId
+      }
+      error {
+        message
+      }
+    }
+  }
+}
+
+mutation deleteBoardCard($input: DeleteCardInput!) {
+  card {
+    deleteCard(input: $input) {
+      ok
+      cardId
       error {
         message
       }
@@ -20,6 +52,7 @@ query getUserCards {
     cards {
       id
       title
+      description
     }
     boards {
       id
@@ -29,6 +62,7 @@ query getUserCards {
         cards {
           id
           title
+          description
         }
       }
     }

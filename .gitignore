@@ -131,3 +131,4 @@ dist
 dev.sqlite3
 .tap/*
 test.sqlite3
+todo/*
